@@ -1,0 +1,9 @@
+[wrap-file]
+directory = StormLib-9.26
+source_url = https://github.com/ladislav-zezula/StormLib/archive/refs/tags/v9.26.tar.gz
+source_filename = StormLib-9.26.tar.gz
+source_hash = 252efd25430aeba2fea4e0ffd99015c51b3ccedd16efa0c5ec73fd00550d8270
+method = cmake
+
+[provide]
+stormlib = storm_dep

@@ -1,0 +1,9 @@
+[wrap-file]
+directory = mimalloc-1.8.7
+source_url = https://github.com/microsoft/mimalloc/archive/refs/tags/v1.8.7.tar.gz
+source_filename = mimalloc-1.8.7.tar.gz
+source_hash = 347793a2c614e525edc4e286ab5cbc4c7a5efc12503e2dafca276d78394c4f07
+method = cmake
+
+[provide]
+mimalloc = mimalloc_obj_dep

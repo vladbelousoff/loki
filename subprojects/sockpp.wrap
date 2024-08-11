@@ -1,0 +1,9 @@
+[wrap-file]
+directory = sockpp-1.0.0
+source_url = https://github.com/fpagliughi/sockpp/archive/refs/tags/v1.0.0.tar.gz
+source_filename = sockpp-1.0.0.tar.gz
+source_hash = 818477fae6eb29b9daacef71a3d0c494de9e48f6fd267a7fc5a4c332db211bc5
+method = cmake
+
+[provide]
+sockpp = sockpp_objs_dep
