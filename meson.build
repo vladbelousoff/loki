@@ -4,8 +4,6 @@ project('loki', 'cpp',
             'cpp_std=c++20',
         ])
 
-# Define the Winsock library dependency
-
 dependencies = [
     dependency('glfw3'),
     dependency('glew'),
