@@ -42,7 +42,7 @@ loki::MPQFileManager::init(const std::filesystem::path& data_dir)
 void
 loki::MPQFileManager::request_open(const std::filesystem::path& path, const FileCallback& callback)
 {
-  auto open = [this, path, callback]() {
+  enqueue_request([this, path, callback]() {
     loki::MPQFile file;
 
     ASSERT(chain.get_archive().get_handle(), "Handle is invalid");
@@ -60,9 +60,7 @@ loki::MPQFileManager::request_open(const std::filesystem::path& path, const File
     } else {
       spdlog::error("Failed to open: {}", path.string().c_str());
     }
-  };
-
-  enqueue_request(std::move(open));
+  });
 }
 
 void
