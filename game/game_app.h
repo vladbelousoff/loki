@@ -43,7 +43,6 @@ private:
   glm::mat4 projection{};
   std::shared_ptr<loki::AuthSession> auth_session;
   std::shared_ptr<loki::WorldSession> world_session;
-  loki::MPQChain mpq_chain;
   std::unique_ptr<loki::MPQFileManager> file_manager;
 };
 
