@@ -15,10 +15,23 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mpq_file.h"
+#pragma once
 
-auto
-loki::MPQFile::is_valid() const -> bool
-{
-  return handle != HANDLE{};
-}
+#include "engine/utils/types.h"
+
+namespace loki {
+
+  class Model
+  {
+  public:
+    struct Header
+    {
+      u8 id[4];
+      u8 version[4];
+      u32 name_length;
+      u32 name_offset;
+    };
+  };
+
+} // namespace loki
+

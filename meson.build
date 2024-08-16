@@ -43,9 +43,11 @@ sources = [
     'engine/network/auth_crypt.cpp',
     'engine/network/world_session.cpp',
     'engine/render/shader.cpp',
+    'engine/render/model.cpp',
     'engine/datasource/mpq/mpq_archive.cpp',
     'engine/datasource/mpq/mpq_chain.cpp',
     'engine/datasource/mpq/mpq_file.cpp',
+    'engine/datasource/mpq/mpq_file_manager.cpp',
     'game/game_app.cpp',
 ]
 

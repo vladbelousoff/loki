@@ -15,10 +15,5 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mpq_file.h"
+#include "model.h"
 
-auto
-loki::MPQFile::is_valid() const -> bool
-{
-  return handle != HANDLE{};
-}

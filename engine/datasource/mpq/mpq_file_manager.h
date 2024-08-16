@@ -17,34 +17,43 @@
 
 #pragma once
 
-#include "StormLib.h"
+#include <functional>
+#include <mutex>
+#include <queue>
 
-#include <filesystem>
+#include "engine/string_manager.h"
+#include "mpq_chain.h"
+#include "mpq_file.h"
 
 namespace loki {
 
-  class MPQArchive
+  class MPQFileManager
   {
-  public:
-    explicit MPQArchive() = default;
-    explicit MPQArchive(const std::filesystem::path& path);
+    using FileCallback = std::function<void(MPQFile)>;
+    using RequestCallback = std::function<void()>;
 
   public:
-    auto is_valid() const -> bool
-    {
-      return handle != HANDLE{};
-    }
+    explicit MPQFileManager();
+    ~MPQFileManager();
 
-    auto get_handle() const -> HANDLE
-    {
-      return handle;
-    }
-
-    auto patch(const std::filesystem::path& path, const std::string& prefix = "") -> bool;
+  public:
+    void init(const std::filesystem::path& data_dir);
+    void request_open(const std::filesystem::path& path, const FileCallback& callback);
 
   private:
-    HANDLE handle{};
+    void run();
+    void enqueue_request(RequestCallback&& callback);
+
+    RequestCallback pop_next_request();
+    void process_next_request();
+
+  private:
+    MPQChain chain;
+    bool running;
+    std::jthread thread;
+    std::mutex requests_mutex;
+    std::condition_variable cv;
+    std::queue<RequestCallback> requests;
   };
 
 } // namespace loki
-

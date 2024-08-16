@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include "engine/datasource/mpq/mpq_chain.h"
+#include "engine/datasource/mpq/mpq_file_manager.h"
 #include "engine/engine_app.h"
 #include "engine/network/auth_session.h"
 #include "engine/network/world_session.h"
@@ -41,5 +43,7 @@ private:
   glm::mat4 projection{};
   std::shared_ptr<loki::AuthSession> auth_session;
   std::shared_ptr<loki::WorldSession> world_session;
+  loki::MPQChain mpq_chain;
+  std::unique_ptr<loki::MPQFileManager> file_manager;
 };
 

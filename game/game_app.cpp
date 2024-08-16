@@ -19,6 +19,9 @@
 
 #include "game_app.h"
 
+#include "engine/datasource/mpq/mpq_chain.h"
+#include "engine/datasource/mpq/mpq_file_manager.h"
+#include "engine/render/model.h"
 #include "engine/utils/types.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -41,14 +44,38 @@ GameApp::on_init()
   }
 
   sockpp::initialize();
+
+  file_manager = std::make_unique<loki::MPQFileManager>();
+  file_manager->init(get_root_path() / "Data");
+
+  file_manager->request_open(R"(Character\Draenei\Female\DraeneiFemale.M2)", [](loki::MPQFile file) {
+    DWORD file_size = SFileGetFileSize(file.handle, nullptr);
+    spdlog::info("File size: {}", file_size);
+
+    loki::Model::Header model_header{};
+    DWORD bytes_read = 0;
+    SFileReadFile(file.handle, &model_header, sizeof(model_header), &bytes_read, nullptr);
+
+    std::vector<char> name(model_header.name_length, 0);
+    SFileSetFilePointer(file.handle, (long)model_header.name_offset, nullptr, FILE_BEGIN);
+    SFileReadFile(file.handle, name.data(), model_header.name_length, &bytes_read, nullptr);
+
+    spdlog::info("{}", name.data());
+  });
+
   return true;
 }
 
 void
 GameApp::on_term()
 {
-  world_session->stop();
-  auth_session->stop();
+  if (world_session) {
+    world_session->stop();
+  }
+
+  if (auth_session) {
+    auth_session->stop();
+  }
 
   EngineApp::on_term();
 }

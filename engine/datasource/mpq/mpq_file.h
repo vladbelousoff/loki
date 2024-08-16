@@ -23,12 +23,14 @@ namespace loki {
 
   class MPQFile
   {
-  public:
-    explicit MPQFile(MPQArchive& archive)
-      : archive{ archive } {};
+    friend class MPQChain;
+    friend class MPQFileManager;
 
-  private:
-    MPQArchive& archive;
+  public:
+    auto is_valid() const -> bool;
+
+  public:
+    HANDLE handle{};
   };
 
 } // namespace loki

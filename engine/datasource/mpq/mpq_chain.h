@@ -21,6 +21,7 @@
 #include <string>
 
 #include "mpq_archive.h"
+#include "mpq_file.h"
 
 namespace loki {
 
@@ -29,6 +30,12 @@ namespace loki {
   public:
     explicit MPQChain() = default;
     explicit MPQChain(const std::filesystem::path& data_dir);
+
+  public:
+    auto get_archive() const -> MPQArchive
+    {
+      return archive;
+    }
 
   private:
     MPQArchive archive;

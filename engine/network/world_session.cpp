@@ -133,7 +133,7 @@ loki::WorldSession::process_command(loki::u16 command)
       handle_auth_response();
       break;
     default:
-      spdlog::info("Unkown command: {:x}", command);
+      spdlog::info("Unknown command: {:x}", command);
       break;
   }
 }

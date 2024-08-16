@@ -41,7 +41,7 @@ loki::MPQChain::MPQChain(const std::filesystem::path& data_dir)
         spdlog::error("Error patching: {}", path.filename().string());
       }
     } else {
-      archive = MPQArchive{ path };
+      archive = MPQArchive(path);
     }
   }
 
