@@ -49,18 +49,13 @@ GameApp::on_init()
   file_manager->init(get_root_path() / "Data");
 
   file_manager->request_open(R"(Character\Draenei\Female\DraeneiFemale.M2)", [](loki::MPQFile file) {
-    DWORD file_size = SFileGetFileSize(file.handle, nullptr);
-    spdlog::info("File size: {}", file_size);
-
     loki::Model::Header model_header{};
-    DWORD bytes_read = 0;
-    SFileReadFile(file.handle, &model_header, sizeof(model_header), &bytes_read, nullptr);
+    file.read(&model_header, sizeof(model_header));
 
-    std::vector<char> name(model_header.name_length, 0);
-    SFileSetFilePointer(file.handle, (long)model_header.name_offset, nullptr, FILE_BEGIN);
-    SFileReadFile(file.handle, name.data(), model_header.name_length, &bytes_read, nullptr);
+    file.seek(static_cast<long>(model_header.name.offset), FILE_BEGIN);
+    auto name = file.read(model_header.name.length);
 
-    spdlog::info("{}", name.data());
+    spdlog::info("Model name: {}", name.data());
   });
 
   return true;

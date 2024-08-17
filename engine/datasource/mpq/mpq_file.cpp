@@ -16,9 +16,34 @@
  */
 
 #include "mpq_file.h"
+#include "libassert/assert.hpp"
 
 auto
 loki::MPQFile::is_valid() const -> bool
 {
   return handle != HANDLE{};
+}
+
+auto
+loki::MPQFile::read(void* data, unsigned long size) const -> unsigned long
+{
+  ASSERT(is_valid());
+  unsigned long bytes_read = 0;
+  SFileReadFile(handle, data, size, &bytes_read, nullptr);
+  return bytes_read;
+}
+
+auto
+loki::MPQFile::read(unsigned long size) const -> std::vector<char>
+{
+  std::vector<char> data(size);
+  unsigned long bytes_read = read(data.data(), size);
+  ASSERT(bytes_read == size);
+  return data;
+}
+
+auto
+loki::MPQFile::seek(long position, long method) const -> unsigned long
+{
+  return SFileSetFilePointer(handle, position, nullptr, method);
 }

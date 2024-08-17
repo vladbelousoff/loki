@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include "engine/utils/types.h"
 #include "mpq_archive.h"
 
 namespace loki {
@@ -28,8 +29,11 @@ namespace loki {
 
   public:
     auto is_valid() const -> bool;
+    auto read(void* data, unsigned long size) const -> unsigned long;
+    auto read(unsigned long size) const -> std::vector<char>;
+    auto seek(long position, long method) const -> unsigned long;
 
-  public:
+  private:
     HANDLE handle{};
   };
 

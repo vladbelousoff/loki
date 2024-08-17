@@ -18,19 +18,71 @@
 #pragma once
 
 #include "engine/utils/types.h"
+#include "glm/vec3.hpp"
 
 namespace loki {
 
   class Model
   {
   public:
+#pragma pack(push, 1)
+
+    struct Sphere
+    {
+      glm::vec3 min;
+      glm::vec3 max;
+      float radius;
+    };
+
+    struct Record
+    {
+      union
+      {
+        u32 number;
+        u32 length;
+      };
+
+      u32 offset;
+    };
+
     struct Header
     {
       u8 id[4];
       u8 version[4];
-      u32 name_length;
-      u32 name_offset;
+      Record name;
+      u32 global_model_flags;
+      Record global_sequence;
+      Record animations;
+      Record animation_lookup;
+      Record bones;
+      Record key_bone_lookup;
+      Record vertices;
+      u32 number_of_views;
+      Record colors;
+      Record textures;
+      Record transparency;
+      Record tex_anims;
+      Record tex_lookup;
+      Record tex_unit_lookup;
+      Record transparency_lookup;
+      Record tex_anim_lookup;
+      Sphere collision_sphere;
+      Sphere bound_sphere;
+      Record bounding_triangles;
+      Record bounding_vertices;
+      Record bounding_normals;
+      Record attachments;
+      Record attach_lookup;
+      Record events;
+      Record lights;
+      Record cameras;
+      Record camera_lookup;
+      Record ribbon_emitters;
+      Record particles_emitters;
+      Record texture_combiner_combos;
     };
+
+#pragma pack(pop)
   };
 
 } // namespace loki
