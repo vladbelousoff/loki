@@ -54,7 +54,7 @@ namespace loki {
   private:
     std::weak_ptr<MPQFileManager> file_manager;
     std::unordered_map<StringID, AssetSharedPtr> assets;
-    mutable std::shared_mutex mutex;
+    mutable std::mutex mutex;
     std::queue<AssetWeakPtr> fresh_assets;
   };
 
