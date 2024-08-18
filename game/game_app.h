@@ -29,6 +29,9 @@
 
 class GameApp : public loki::EngineApp
 {
+public:
+  ~GameApp() override;
+
 protected:
   bool on_init() override;
   void on_term() override;

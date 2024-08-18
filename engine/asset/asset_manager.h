@@ -33,6 +33,8 @@ namespace loki {
     {
     }
 
+    virtual ~AssetManager() = default;
+
   public:
     template<typename AssetType>
     void request_load_asset_full(const std::filesystem::path& path)

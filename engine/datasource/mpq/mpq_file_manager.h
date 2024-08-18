@@ -34,7 +34,7 @@ namespace loki {
 
   public:
     explicit MPQFileManager(const std::filesystem::path& data_dir);
-    ~MPQFileManager();
+    virtual ~MPQFileManager();
 
   public:
     void request_file(const std::filesystem::path& path, const FileCallback& callback);

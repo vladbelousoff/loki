@@ -35,6 +35,14 @@ struct
   float phi{ 5.182f }, theta{ 5.716f };
 } camera;
 
+GameApp::~GameApp()
+{
+  // file_manager must be destroyed before asset_manager
+  // to clear queue of requests
+  file_manager = nullptr;
+  asset_manager = nullptr;
+}
+
 bool
 GameApp::on_init()
 {
@@ -56,11 +64,6 @@ GameApp::on_init()
 void
 GameApp::on_term()
 {
-  // file_manager must be destroyed before asset_manager
-  // to clear queue of requests
-  file_manager = nullptr;
-  asset_manager = nullptr;
-
   EngineApp::on_term();
 }
 
