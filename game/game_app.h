@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include "engine/asset/asset_manager.h"
 #include "engine/datasource/mpq/mpq_chain.h"
 #include "engine/datasource/mpq/mpq_file_manager.h"
 #include "engine/engine_app.h"
@@ -43,6 +44,7 @@ private:
   glm::mat4 projection{};
   std::shared_ptr<loki::AuthSession> auth_session;
   std::shared_ptr<loki::WorldSession> world_session;
-  std::unique_ptr<loki::MPQFileManager> file_manager;
+  std::shared_ptr<loki::MPQFileManager> file_manager;
+  std::shared_ptr<loki::AssetManager> asset_manager;
 };
 

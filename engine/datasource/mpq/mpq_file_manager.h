@@ -29,16 +29,15 @@ namespace loki {
 
   class MPQFileManager
   {
-    using FileCallback = std::function<void(MPQFile)>;
+    using FileCallback = std::function<void(MPQFile&)>;
     using RequestCallback = std::function<void()>;
 
   public:
-    explicit MPQFileManager();
+    explicit MPQFileManager(const std::filesystem::path& data_dir);
     ~MPQFileManager();
 
   public:
-    void init(const std::filesystem::path& data_dir);
-    void request_open(const std::filesystem::path& path, const FileCallback& callback);
+    void request_file(const std::filesystem::path& path, const FileCallback& callback);
 
   private:
     void run();

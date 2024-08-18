@@ -15,40 +15,10 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "m_2_model.h"
 
-#include <filesystem>
-
-#ifdef NOMINMAX
-#undef NOMINMAX
-#endif
-
-#include "StormLib.h"
-
-namespace loki {
-
-  class MPQArchive
-  {
-  public:
-    explicit MPQArchive() = default;
-    explicit MPQArchive(const std::filesystem::path& path);
-
-  public:
-    auto is_valid() const -> bool
-    {
-      return handle != HANDLE{};
-    }
-
-    auto get_handle() const -> HANDLE
-    {
-      return handle;
-    }
-
-    auto patch(const std::filesystem::path& path, const std::string& prefix = "") -> bool;
-
-  private:
-    HANDLE handle{};
-  };
-
-} // namespace loki
-
+void
+loki::M2Model::load_all(const loki::MPQFile& file)
+{
+  file.read(&header, sizeof(header));
+}

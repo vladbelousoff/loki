@@ -17,37 +17,44 @@
 
 #pragma once
 
+#include "engine/datasource/mpq/mpq_file.h"
+#include "engine/string_manager.h"
+#include "engine/utils/strings.h"
+
 #include <filesystem>
-
-#ifdef NOMINMAX
-#undef NOMINMAX
-#endif
-
-#include "StormLib.h"
+#include <mutex>
 
 namespace loki {
 
-  class MPQArchive
+  class Asset
   {
   public:
-    explicit MPQArchive() = default;
-    explicit MPQArchive(const std::filesystem::path& path);
+    Asset(const Asset&) = delete;
+    Asset& operator=(const Asset&) = delete;
+
+    ~Asset() = default;
 
   public:
-    auto is_valid() const -> bool
+    auto is_loaded() const -> bool
     {
-      return handle != HANDLE{};
+      std::shared_lock lock(load_mutex);
+      return all_loaded;
     }
 
-    auto get_handle() const -> HANDLE
-    {
-      return handle;
-    }
+    void wait_load_all(const MPQFile& file);
 
-    auto patch(const std::filesystem::path& path, const std::string& prefix = "") -> bool;
+  protected:
+    virtual void load_all(const MPQFile& file) = 0;
+
+  public:
+    explicit Asset()
+      : all_loaded(false)
+    {
+    }
 
   private:
-    HANDLE handle{};
+    mutable std::shared_mutex load_mutex;
+    bool all_loaded;
   };
 
 } // namespace loki

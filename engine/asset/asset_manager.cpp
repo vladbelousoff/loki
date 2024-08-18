@@ -15,5 +15,22 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "model.h"
+#include "asset_manager.h"
 
+void
+loki::AssetManager::insert_asset(loki::StringID name, const loki::AssetManager::AssetSharedPtr& asset)
+{
+  std::lock_guard lock(mutex);
+  assets.insert({ name, asset });
+  fresh_assets.push(asset);
+}
+
+void
+loki::AssetManager::process_fresh_assets(const std::function<void(AssetWeakPtr&)>& callback)
+{
+  std::shared_lock lock(mutex);
+  while (!fresh_assets.empty()) {
+    callback(fresh_assets.front());
+    fresh_assets.pop();
+  }
+}

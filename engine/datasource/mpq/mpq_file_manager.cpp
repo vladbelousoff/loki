@@ -18,45 +18,44 @@
 #include "mpq_file_manager.h"
 #include "libassert/assert.hpp"
 
-loki::MPQFileManager::MPQFileManager()
+loki::MPQFileManager::MPQFileManager(const std::filesystem::path& data_dir)
   : running(true)
   , thread(&MPQFileManager::run, this)
-{
-}
-
-loki::MPQFileManager::~MPQFileManager()
-{
-  std::lock_guard<std::mutex> lock(requests_mutex);
-  running = false;
-  cv.notify_all();
-}
-
-void
-loki::MPQFileManager::init(const std::filesystem::path& data_dir)
 {
   enqueue_request([this, data_dir]() {
     chain = MPQChain(data_dir);
   });
 }
 
+loki::MPQFileManager::~MPQFileManager()
+{
+  std::lock_guard<std::mutex> lock(requests_mutex);
+  running = false;
+  while (!requests.empty()) {
+    requests.pop();
+  }
+  cv.notify_all();
+}
+
 void
-loki::MPQFileManager::request_open(const std::filesystem::path& path, const FileCallback& callback)
+loki::MPQFileManager::request_file(const std::filesystem::path& path, const FileCallback& callback)
 {
   enqueue_request([this, path, callback]() {
-    loki::MPQFile file;
+    HANDLE handle{};
 
     auto archive_handle = chain.get_archive().get_handle();
     ASSERT(archive_handle, "Handle is invalid");
 
-    if (SFileOpenFileEx(archive_handle, path.string().c_str(), SFILE_OPEN_FROM_MPQ, &file.handle)) {
+    if (SFileOpenFileEx(archive_handle, path.string().c_str(), SFILE_OPEN_FROM_MPQ, &handle)) {
       char filename[MAX_PATH];
-      if (SFileGetFileName(file.handle, filename)) {
-        spdlog::info("Open file: {}", filename);
+      if (SFileGetFileName(handle, filename)) {
+        spdlog::info("Open file: '{}'", filename);
       }
 
+      loki::MPQFile file(filename, handle);
       callback(file);
 
-      bool result = SFileCloseFile(file.handle);
+      bool result = SFileCloseFile(handle);
       ASSERT(result, "Can't close the file");
     } else {
       spdlog::error("Failed to open: {}", path.string().c_str());
@@ -80,7 +79,7 @@ loki::MPQFileManager::run()
 void
 loki::MPQFileManager::enqueue_request(loki::MPQFileManager::RequestCallback&& callback)
 {
-  std::unique_lock lock(requests_mutex);
+  std::lock_guard lock(requests_mutex);
   requests.emplace(callback);
   cv.notify_one();
 }

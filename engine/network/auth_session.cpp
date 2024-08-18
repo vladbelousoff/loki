@@ -18,6 +18,7 @@
 #include "auth_session.h"
 
 #include "engine/config.h"
+#include "engine/utils/strings.h"
 #include "world_session.h"
 
 struct PaketAuthChallengeRequest
@@ -150,15 +151,8 @@ loki::AuthSession::handle_connection()
 void
 loki::AuthSession::login(std::string_view username, std::string_view password)
 {
-  auto to_uppercase = [](std::string& string) {
-    std::transform(string.begin(), string.end(), string.begin(), ::toupper);
-  };
-
-  username_uppercase = username;
-  to_uppercase(username_uppercase);
-
-  password_uppercase = password;
-  to_uppercase(password_uppercase);
+  username_uppercase = to_uppercase(username);
+  password_uppercase = to_uppercase(password);
 
   state = AuthSessionState::CHALLENGE;
 }

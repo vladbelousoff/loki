@@ -17,14 +17,19 @@
 
 #pragma once
 
+#include "engine/asset/asset.h"
 #include "engine/utils/types.h"
+
 #include "glm/vec3.hpp"
 
 namespace loki {
 
-  class Model
+  class M2Model : public Asset
   {
-  public:
+  protected:
+    void load_all(const loki::MPQFile& file) override;
+
+  private:
 #pragma pack(push, 1)
 
     struct Sphere
@@ -83,7 +88,8 @@ namespace loki {
     };
 
 #pragma pack(pop)
+
+    Header header{};
   };
 
 } // namespace loki
-

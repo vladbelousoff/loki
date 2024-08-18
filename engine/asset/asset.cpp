@@ -15,40 +15,15 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "asset.h"
 
-#include <filesystem>
+void
+loki::Asset::wait_load_all(const MPQFile& file)
+{
+  std::unique_lock lock(load_mutex);
 
-#ifdef NOMINMAX
-#undef NOMINMAX
-#endif
+  load_all(file);
+  all_loaded = true;
 
-#include "StormLib.h"
-
-namespace loki {
-
-  class MPQArchive
-  {
-  public:
-    explicit MPQArchive() = default;
-    explicit MPQArchive(const std::filesystem::path& path);
-
-  public:
-    auto is_valid() const -> bool
-    {
-      return handle != HANDLE{};
-    }
-
-    auto get_handle() const -> HANDLE
-    {
-      return handle;
-    }
-
-    auto patch(const std::filesystem::path& path, const std::string& prefix = "") -> bool;
-
-  private:
-    HANDLE handle{};
-  };
-
-} // namespace loki
-
+  spdlog::info("Loaded file '{}'", file.get_name().to_string());
+}

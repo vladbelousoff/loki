@@ -1,10 +1,8 @@
 #include <mimalloc-new-delete.h>
 
-#include <CLI/CLI.hpp>
-#include <glm/glm.hpp>
-#include <spdlog/spdlog.h>
-
+#include "CLI/CLI.hpp"
 #include "game/game_app.h"
+#include "spdlog/spdlog.h"
 
 int
 main(int argc, char* argv[])

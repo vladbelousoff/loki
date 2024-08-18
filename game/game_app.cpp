@@ -15,13 +15,12 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "engine/network/auth_session.h"
-
 #include "game_app.h"
 
 #include "engine/datasource/mpq/mpq_chain.h"
 #include "engine/datasource/mpq/mpq_file_manager.h"
-#include "engine/render/model.h"
+#include "engine/model/m_2_model.h"
+#include "engine/network/auth_session.h"
 #include "engine/utils/types.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -45,18 +44,11 @@ GameApp::on_init()
 
   sockpp::initialize();
 
-  file_manager = std::make_unique<loki::MPQFileManager>();
-  file_manager->init(get_root_path() / "Data");
+  file_manager = std::make_shared<loki::MPQFileManager>(get_root_path() / "data");
+  asset_manager = std::make_shared<loki::AssetManager>(file_manager);
 
-  file_manager->request_open(R"(Character\Draenei\Female\DraeneiFemale.M2)", [](loki::MPQFile file) {
-    loki::Model::Header model_header{};
-    file.read(&model_header, sizeof(model_header));
-
-    file.seek(static_cast<long>(model_header.name.offset), FILE_BEGIN);
-    auto name = file.read(model_header.name.length);
-
-    spdlog::info("Model name: {}", name.data());
-  });
+  std::filesystem::path model_path = R"(Character\Draenei\Female\DraeneiFemale.M2)";
+  asset_manager->request_load_asset_full<loki::M2Model>(model_path);
 
   return true;
 }
@@ -64,13 +56,10 @@ GameApp::on_init()
 void
 GameApp::on_term()
 {
-  if (world_session) {
-    world_session->stop();
-  }
-
-  if (auth_session) {
-    auth_session->stop();
-  }
+  // file_manager must be destroyed before asset_manager
+  // to clear queue of requests
+  file_manager = nullptr;
+  asset_manager = nullptr;
 
   EngineApp::on_term();
 }

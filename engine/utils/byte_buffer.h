@@ -17,15 +17,15 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
-
 #include "engine/utils/types.h"
 #include "libassert/assert.hpp"
 #include "pfr.hpp"
 #include "sockpp/tcp_connector.h"
 #include "sockpp/version.h"
 #include "spdlog/spdlog.h"
+
+#include <string>
+#include <vector>
 
 namespace loki {
 

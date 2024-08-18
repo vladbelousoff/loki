@@ -17,16 +17,16 @@
 
 #pragma once
 
-#include <shared_mutex>
-#include <string_view>
-#include <thread>
-
 #include "auth_crypt.h"
 #include "auth_session.h"
 #include "engine/utils/byte_buffer.h"
 #include "engine/utils/types.h"
 #include "opcodes.h"
 #include "sockpp/tcp_connector.h"
+
+#include <shared_mutex>
+#include <string_view>
+#include <thread>
 
 namespace loki {
 

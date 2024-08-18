@@ -17,14 +17,14 @@
 
 #pragma once
 
-#include <array>
-#include <string_view>
-#include <vector>
-
 #include "engine/crypto/crypto_hash.h"
 #include "engine/network/auth_defines.h"
 #include "engine/utils/big_num.h"
 #include "engine/utils/types.h"
+
+#include <array>
+#include <string_view>
+#include <vector>
 
 namespace loki {
 

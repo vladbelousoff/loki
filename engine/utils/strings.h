@@ -17,38 +17,15 @@
 
 #pragma once
 
-#include <filesystem>
-
-#ifdef NOMINMAX
-#undef NOMINMAX
-#endif
-
-#include "StormLib.h"
+#include <algorithm>
+#include <string>
 
 namespace loki {
 
-  class MPQArchive
-  {
-  public:
-    explicit MPQArchive() = default;
-    explicit MPQArchive(const std::filesystem::path& path);
-
-  public:
-    auto is_valid() const -> bool
-    {
-      return handle != HANDLE{};
-    }
-
-    auto get_handle() const -> HANDLE
-    {
-      return handle;
-    }
-
-    auto patch(const std::filesystem::path& path, const std::string& prefix = "") -> bool;
-
-  private:
-    HANDLE handle{};
+  static auto to_uppercase = [](std::string_view string_view) {
+    std::string result;
+    std::transform(string_view.begin(), string_view.end(), result.begin(), ::toupper);
+    return result;
   };
 
 } // namespace loki
-

@@ -25,6 +25,12 @@ loki::MPQFile::is_valid() const -> bool
 }
 
 auto
+loki::MPQFile::get_name() const -> loki::StringID
+{
+  return name;
+}
+
+auto
 loki::MPQFile::read(void* data, unsigned long size) const -> unsigned long
 {
   ASSERT(is_valid());

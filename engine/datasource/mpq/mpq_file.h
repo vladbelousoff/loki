@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include "engine/string_manager.h"
 #include "engine/utils/types.h"
 #include "mpq_archive.h"
 
@@ -24,17 +25,24 @@ namespace loki {
 
   class MPQFile
   {
-    friend class MPQChain;
-    friend class MPQFileManager;
+  public:
+    explicit MPQFile(const std::string& name, HANDLE handle)
+      : name(name)
+      , handle(handle)
+    {
+    }
 
   public:
     auto is_valid() const -> bool;
+    auto get_name() const -> StringID;
+
     auto read(void* data, unsigned long size) const -> unsigned long;
     auto read(unsigned long size) const -> std::vector<char>;
     auto seek(long position, long method) const -> unsigned long;
 
   private:
-    HANDLE handle{};
+    StringID name;
+    HANDLE handle;
   };
 
 } // namespace loki
