@@ -18,7 +18,7 @@
 #include "m_2_model.h"
 
 void
-loki::M2Model::load_all(const loki::MPQFile& file)
+loki::M2Model::load_full(const loki::MPQFile& file)
 {
   file.read(&header, sizeof(header));
 }

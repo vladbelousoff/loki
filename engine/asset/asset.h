@@ -38,23 +38,23 @@ namespace loki {
     auto is_loaded() const -> bool
     {
       std::shared_lock lock(load_mutex);
-      return all_loaded;
+      return fully_loaded;
     }
 
-    void wait_load_all(const MPQFile& file);
+    void wait_load_full(const MPQFile& file);
 
   protected:
-    virtual void load_all(const MPQFile& file) = 0;
+    virtual void load_full(const MPQFile& file) = 0;
 
   public:
     explicit Asset()
-      : all_loaded(false)
+      : fully_loaded(false)
     {
     }
 
   private:
     mutable std::shared_mutex load_mutex;
-    bool all_loaded;
+    bool fully_loaded;
   };
 
 } // namespace loki

@@ -18,12 +18,12 @@
 #include "asset.h"
 
 void
-loki::Asset::wait_load_all(const MPQFile& file)
+loki::Asset::wait_load_full(const MPQFile& file)
 {
   std::unique_lock lock(load_mutex);
 
-  load_all(file);
-  all_loaded = true;
+  load_full(file);
+  fully_loaded = true;
 
   spdlog::info("Loaded file '{}'", file.get_name().to_string());
 }

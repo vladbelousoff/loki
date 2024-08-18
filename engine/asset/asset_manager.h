@@ -41,7 +41,7 @@ namespace loki {
     {
       file_manager.lock()->request_file(path, [this](MPQFile& file) {
         auto asset = std::make_shared<AssetType>();
-        asset->wait_load_all(file);
+        asset->wait_load_full(file);
         insert_asset(file.get_name(), asset);
       });
     }
