@@ -33,14 +33,27 @@ namespace loki {
     using RequestCallback = std::function<void()>;
 
   public:
-    explicit MPQFileManager(const std::filesystem::path& data_dir);
-    virtual ~MPQFileManager();
+    static MPQFileManager& get_ref()
+    {
+      static MPQFileManager file_manager{};
+      return file_manager;
+    }
+
+    void init(const std::filesystem::path& data_dir);
+    void term();
 
   public:
     void request_file(const std::filesystem::path& path, const FileCallback& callback);
 
   private:
+    explicit MPQFileManager()
+      : running(true)
+      , thread(&MPQFileManager::run, this)
+    {
+    }
+
     void run();
+    void stop();
     void enqueue_request(RequestCallback&& callback);
 
     RequestCallback pop_next_request();
@@ -49,7 +62,7 @@ namespace loki {
   private:
     MPQChain chain;
     bool running;
-    std::jthread thread;
+    std::thread thread;
     std::mutex requests_mutex;
     std::condition_variable cv;
     std::queue<RequestCallback> requests;

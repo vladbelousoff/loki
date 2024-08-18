@@ -38,7 +38,7 @@ namespace loki {
     }
 
   private:
-    MPQArchive archive;
+    MPQArchive archive{};
   };
 
 } // namespace loki

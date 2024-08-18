@@ -37,11 +37,11 @@ struct
 
 GameApp::~GameApp()
 {
-  // file_manager must be destroyed before asset_manager
-  // to clear queue of requests
-  file_manager = nullptr;
-  asset_manager = nullptr;
+  loki::MPQFileManager::get_ref().term();
 }
+
+std::filesystem::path model_path = R"(Character\Draenei\Female\DraeneiFemale.M2)";
+auto draenei_female = loki::M2Model::create(model_path);
 
 bool
 GameApp::on_init()
@@ -52,11 +52,8 @@ GameApp::on_init()
 
   sockpp::initialize();
 
-  file_manager = std::make_shared<loki::MPQFileManager>(get_root_path() / "data");
-  asset_manager = std::make_shared<loki::AssetManager>(file_manager);
-
-  std::filesystem::path model_path = R"(Character\Draenei\Female\DraeneiFemale.M2)";
-  asset_manager->request_load_asset_full<loki::M2Model>(model_path);
+  loki::MPQFileManager::get_ref().init(get_root_path() / "data");
+  draenei_female->request_load_full();
 
   return true;
 }

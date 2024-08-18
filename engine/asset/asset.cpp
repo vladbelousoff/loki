@@ -16,6 +16,7 @@
  */
 
 #include "asset.h"
+#include "engine/datasource/mpq/mpq_file_manager.h"
 
 void
 loki::Asset::wait_load_full(const MPQFile& file)
@@ -23,9 +24,31 @@ loki::Asset::wait_load_full(const MPQFile& file)
   std::unique_lock lock(load_mutex);
 
   file.read_all(buffer);
-
-  spdlog::info("Loaded file '{}'", file.get_name().to_string());
-
   on_fully_loaded();
-  fully_loaded = true;
+  loading_state = AssetLoadingState::LOADED_FULLY;
+
+  spdlog::info("Loaded file '{}'", asset_path.to_string());
+}
+
+void
+loki::Asset::request_load_full()
+{
+  if (loading_state != AssetLoadingState::NOT_LOADED) {
+    return;
+  }
+
+  loading_state = AssetLoadingState::LOADING;
+
+  auto& file_manager = MPQFileManager::get_ref();
+  auto self = weak_from_this();
+
+  file_manager.request_file(asset_path.to_string(), [self](MPQFile& file) {
+    if (auto self_shared = self.lock()) {
+      self_shared->wait_load_full(file);
+    } else {
+      spdlog::warn("Asset '{}' is already expired", file.get_name().to_string());
+    }
+  });
+
+  spdlog::info("Loading file '{}'", asset_path.to_string());
 }

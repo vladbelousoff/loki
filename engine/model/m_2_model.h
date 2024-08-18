@@ -25,7 +25,7 @@
 
 namespace loki {
 
-  class M2Model : public Asset
+  class M2Model : public AssetWrapper<M2Model>
   {
   protected:
     void on_fully_loaded() override;

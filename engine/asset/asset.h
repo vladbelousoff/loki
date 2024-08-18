@@ -26,38 +26,59 @@
 
 namespace loki {
 
-  class Asset
+  enum class AssetLoadingState
+  {
+    NOT_LOADED,
+    LOADING,
+    LOADED_FULLY,
+  };
+
+  class Asset : public std::enable_shared_from_this<Asset>
   {
   public:
-    Asset(const Asset&) = delete;
+    explicit Asset(const Asset&) = delete;
     Asset& operator=(const Asset&) = delete;
 
-    ~Asset() = default;
+    virtual ~Asset() = default;
 
   public:
-    auto is_loaded() const -> bool
+    auto get_loading_state() const -> AssetLoadingState
     {
-      std::shared_lock lock(load_mutex);
-      return fully_loaded;
+      return loading_state;
     }
 
-    void wait_load_full(const MPQFile& file);
+    void request_load_full();
 
-  protected:
     virtual void on_fully_loaded() = 0;
 
   protected:
+    StringID asset_path;
     std::vector<char> buffer;
 
-  public:
+  protected:
+    void wait_load_full(const MPQFile& file);
+
+  protected:
     explicit Asset()
-      : fully_loaded(false)
+      : loading_state(AssetLoadingState::NOT_LOADED)
     {
     }
 
   private:
     mutable std::shared_mutex load_mutex;
-    bool fully_loaded;
+    std::atomic<AssetLoadingState> loading_state;
+  };
+
+  template<typename AssetType>
+  class AssetWrapper : public Asset
+  {
+  public:
+    static auto create(const std::filesystem::path& path) -> std::shared_ptr<AssetType>
+    {
+      auto result = std::make_shared<AssetType>();
+      result->asset_path = StringID(path.string());
+      return result;
+    }
   };
 
 } // namespace loki

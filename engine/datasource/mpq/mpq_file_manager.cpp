@@ -18,23 +18,19 @@
 #include "mpq_file_manager.h"
 #include "libassert/assert.hpp"
 
-loki::MPQFileManager::MPQFileManager(const std::filesystem::path& data_dir)
-  : running(true)
-  , thread(&MPQFileManager::run, this)
+void
+loki::MPQFileManager::init(const std::filesystem::path& data_dir)
 {
   enqueue_request([this, data_dir]() {
     chain = MPQChain(data_dir);
   });
 }
 
-loki::MPQFileManager::~MPQFileManager()
+void
+loki::MPQFileManager::term()
 {
-  std::lock_guard<std::mutex> lock(requests_mutex);
-  running = false;
-  while (!requests.empty()) {
-    requests.pop();
-  }
-  cv.notify_all();
+  stop();
+  thread.join();
 }
 
 void
@@ -74,6 +70,19 @@ loki::MPQFileManager::run()
 
     process_next_request();
   }
+}
+
+void
+loki::MPQFileManager::stop()
+{
+  std::lock_guard<std::mutex> lock(requests_mutex);
+
+  running = false;
+  while (!requests.empty()) {
+    requests.pop();
+  }
+
+  cv.notify_all();
 }
 
 void
