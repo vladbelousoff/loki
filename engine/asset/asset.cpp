@@ -26,6 +26,6 @@ loki::Asset::wait_load_full(const MPQFile& file)
 
   spdlog::info("Loaded file '{}'", file.get_name().to_string());
 
-  fully_loaded = true;
   on_fully_loaded();
+  fully_loaded = true;
 }

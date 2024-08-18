@@ -21,4 +21,14 @@ void
 loki::M2Model::on_fully_loaded()
 {
   header = reinterpret_cast<Header*>(buffer.data());
+
+  model_name.resize(header->name.length);
+  memcpy(model_name.data(), &buffer[header->name.offset], model_name.size());
+
+  spdlog::info("Loaded model name: {}", model_name.data());
+
+  raw_vertices.resize(sizeof(ModelVertex) * header->vertices.number);
+  memcpy(raw_vertices.data(), &buffer[header->vertices.offset], raw_vertices.size());
+
+  spdlog::info("Loaded vertices: {}", raw_vertices.size());
 }

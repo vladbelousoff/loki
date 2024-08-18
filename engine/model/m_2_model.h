@@ -20,6 +20,7 @@
 #include "engine/asset/asset.h"
 #include "engine/utils/types.h"
 
+#include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 
 namespace loki {
@@ -31,6 +32,16 @@ namespace loki {
 
   private:
 #pragma pack(push, 1)
+
+    struct ModelVertex
+    {
+      glm::vec3 pos;
+      u8 weights[4];
+      u8 bones[4];
+      glm::vec3 normal;
+      glm::vec2 texcoords;
+      int unk1, unk2; // always 0,0 so this is probably unused
+    };
 
     struct Sphere
     {
@@ -90,6 +101,9 @@ namespace loki {
 #pragma pack(pop)
 
     Header* header{};
+    std::vector<char> model_name;
+    std::vector<ModelVertex> raw_vertices;
+    std::vector<u32> raw_indices;
   };
 
 } // namespace loki
