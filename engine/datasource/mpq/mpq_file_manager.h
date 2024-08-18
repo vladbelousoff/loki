@@ -60,7 +60,7 @@ namespace loki {
     void process_next_request();
 
   private:
-    MPQChain chain;
+    MPQChain chain{};
     bool running;
     std::thread thread;
     std::mutex requests_mutex;
