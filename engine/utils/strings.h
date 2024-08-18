@@ -23,7 +23,7 @@
 namespace loki {
 
   static auto to_uppercase = [](std::string_view string_view) {
-    std::string result;
+    std::string result(string_view.size(), 0);
     std::transform(string_view.begin(), string_view.end(), result.begin(), ::toupper);
     return result;
   };

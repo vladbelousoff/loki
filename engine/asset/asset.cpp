@@ -33,7 +33,7 @@ loki::Asset::wait_load_full(const MPQFile& file)
 void
 loki::Asset::request_load_full()
 {
-  if (loading_state != AssetLoadingState::NOT_LOADED) {
+  if (get_loading_state() != AssetLoadingState::NOT_LOADED) {
     return;
   }
 

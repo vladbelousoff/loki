@@ -76,7 +76,7 @@ namespace loki {
     static auto create(const std::filesystem::path& path) -> std::shared_ptr<AssetType>
     {
       auto result = std::make_shared<AssetType>();
-      result->asset_path = StringID(path.string());
+      result->asset_path = StringID(to_uppercase(path.string()));
       return result;
     }
   };
