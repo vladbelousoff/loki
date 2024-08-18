@@ -44,7 +44,10 @@ namespace loki {
     void wait_load_full(const MPQFile& file);
 
   protected:
-    virtual void load_full(const MPQFile& file) = 0;
+    virtual void on_fully_loaded() = 0;
+
+  protected:
+    std::vector<char> buffer;
 
   public:
     explicit Asset()

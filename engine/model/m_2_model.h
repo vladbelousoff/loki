@@ -27,7 +27,7 @@ namespace loki {
   class M2Model : public Asset
   {
   protected:
-    void load_full(const loki::MPQFile& file) override;
+    void on_fully_loaded() override;
 
   private:
 #pragma pack(push, 1)
@@ -89,7 +89,7 @@ namespace loki {
 
 #pragma pack(pop)
 
-    Header header{};
+    Header* header{};
   };
 
 } // namespace loki

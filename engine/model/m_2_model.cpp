@@ -18,7 +18,7 @@
 #include "m_2_model.h"
 
 void
-loki::M2Model::load_full(const loki::MPQFile& file)
+loki::M2Model::on_fully_loaded()
 {
-  file.read(&header, sizeof(header));
+  header = reinterpret_cast<Header*>(buffer.data());
 }

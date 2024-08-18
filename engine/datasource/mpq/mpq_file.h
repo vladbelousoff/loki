@@ -35,9 +35,12 @@ namespace loki {
   public:
     auto is_valid() const -> bool;
     auto get_name() const -> StringID;
+    auto get_size() const -> unsigned long;
 
     auto read(void* data, unsigned long size) const -> unsigned long;
     auto read(unsigned long size) const -> std::vector<char>;
+    auto read_all(std::vector<char>& buffer) const -> unsigned long;
+
     auto seek(long position, long method) const -> unsigned long;
 
   private:

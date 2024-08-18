@@ -54,3 +54,18 @@ loki::MPQFile::seek(long position, long method) const -> unsigned long
   ASSERT(is_valid());
   return SFileSetFilePointer(handle, position, nullptr, method);
 }
+
+auto
+loki::MPQFile::get_size() const -> unsigned long
+{
+  ASSERT(is_valid());
+  return SFileGetFileSize(handle, nullptr);
+}
+
+auto
+loki::MPQFile::read_all(std::vector<char>& buffer) const -> unsigned long
+{
+  auto size = get_size();
+  buffer.resize(size);
+  return read(buffer.data(), size);
+}

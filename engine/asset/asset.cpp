@@ -22,8 +22,10 @@ loki::Asset::wait_load_full(const MPQFile& file)
 {
   std::unique_lock lock(load_mutex);
 
-  load_full(file);
-  fully_loaded = true;
+  file.read_all(buffer);
 
   spdlog::info("Loaded file '{}'", file.get_name().to_string());
+
+  fully_loaded = true;
+  on_fully_loaded();
 }
