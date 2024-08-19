@@ -17,15 +17,23 @@
 
 #include "asset.h"
 #include "engine/datasource/mpq/mpq_file_manager.h"
+#include "engine/mt/main_thread_queue.h"
 
 void
 loki::Asset::wait_load_full(const MPQFile& file)
 {
   file.read_all(buffer);
-  on_fully_loaded(); // TODO: move this to the main/game thread
-  loading_state = AssetLoadingState::LOADED_FULLY;
 
-  spdlog::info("Loaded file '{}'", asset_path.to_string());
+  auto self = weak_from_this();
+  auto task = [self]() {
+    if (auto self_shared = self.lock()) {
+      self_shared->on_fully_loaded();
+      self_shared->loading_state = AssetLoadingState::LOADED_FULLY;
+      spdlog::info("Loaded file '{}'", self_shared->asset_path.to_string());
+    }
+  };
+
+  MainThreadQueue::get_ref().add_task(std::move(task));
 }
 
 void

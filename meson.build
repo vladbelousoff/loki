@@ -50,6 +50,7 @@ sources = [
     'engine/asset/asset.cpp',
     'engine/model/m_2_model.cpp',
     'engine/model/m_2_model_view.cpp',
+    'engine/mt/main_thread_queue.cpp',
     'game/game_app.cpp',
 ]
 

@@ -20,6 +20,7 @@
 #include "engine/datasource/mpq/mpq_chain.h"
 #include "engine/datasource/mpq/mpq_file_manager.h"
 #include "engine/model/m_2_model.h"
+#include "engine/mt/main_thread_queue.h"
 #include "engine/network/auth_session.h"
 #include "engine/utils/types.h"
 #include "glm/glm.hpp"
@@ -67,6 +68,9 @@ GameApp::on_term()
 void
 GameApp::on_update()
 {
+  // Update main thread at the start of the frame
+  loki::MainThreadQueue::get_ref().perform_all_tasks();
+
   float x = camera.distance_to_origin * glm::sin(camera.phi) * glm::cos(camera.theta);
   float y = camera.distance_to_origin * glm::cos(camera.phi);
   float z = camera.distance_to_origin * glm::sin(camera.phi) * glm::sin(camera.theta);
