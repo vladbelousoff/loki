@@ -104,7 +104,6 @@ namespace loki {
     Header* header{};
     std::vector<char> model_name;
     std::vector<ModelVertex> raw_vertices;
-    std::vector<u32> raw_indices;
     std::vector<std::shared_ptr<M2ModelView>> model_views;
   };
 

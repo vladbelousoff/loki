@@ -55,6 +55,7 @@ namespace loki {
 #pragma pack(pop)
 
     Data* data{};
+    std::vector<u32> raw_indices;
   };
 
 } // namespace loki

@@ -23,4 +23,14 @@ loki::M2ModelView::on_fully_loaded()
 {
   data = reinterpret_cast<Data*>(buffer.data());
   ASSERT(data->id[0] == 'S' && data->id[1] == 'K' && data->id[2] == 'I' && data->id[3] == 'N');
+
+  const u16* index_lookup = reinterpret_cast<u16*>(&buffer[data->index.offset]);
+  const u16* triangles = reinterpret_cast<u16*>(&buffer[data->tris.offset]);
+
+  raw_indices.resize(data->tris.number);
+  for (u32 i = 0; i < data->tris.number; ++i) {
+    raw_indices[i] = index_lookup[triangles[i]];
+  }
+
+  spdlog::info("Loaded indices: {}", raw_indices.size());
 }
