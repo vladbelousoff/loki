@@ -21,7 +21,7 @@ void
 loki::MainThreadQueue::add_task(loki::MainThreadQueue::Task&& task)
 {
   std::lock_guard lock(mutex);
-  task_queue.emplace(task);
+  task_queue.emplace(std::forward<Task>(task));
 }
 
 void
