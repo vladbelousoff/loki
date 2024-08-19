@@ -27,8 +27,18 @@ loki::M2Model::on_fully_loaded()
 
   spdlog::info("Loaded model name: {}", model_name.data());
 
-  raw_vertices.resize(sizeof(ModelVertex) * header->vertices.number);
+  raw_vertices.resize(header->vertices.number);
   memcpy(raw_vertices.data(), &buffer[header->vertices.offset], raw_vertices.size());
 
-  spdlog::info("Loaded vertices: {}", raw_vertices.size());
+  spdlog::info("Loaded vertices: {}", header->vertices.number);
+  spdlog::info("Number of views: {}", header->number_of_views);
+
+  for (u32 i = 0; i < header->number_of_views; ++i) {
+    auto path = std::filesystem::path(asset_path.to_string());
+    path.replace_extension("");
+    auto model_view_path = std::format("{}0{}.skin", path.string(), i);
+    auto model_view = M2ModelView::create(model_view_path);
+    model_view->request_load_full();
+    model_views.push_back(std::move(model_view));
+  }
 }

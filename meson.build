@@ -49,6 +49,7 @@ sources = [
     'engine/datasource/mpq/mpq_file_manager.cpp',
     'engine/asset/asset.cpp',
     'engine/model/m_2_model.cpp',
+    'engine/model/m_2_model_view.cpp',
     'game/game_app.cpp',
 ]
 

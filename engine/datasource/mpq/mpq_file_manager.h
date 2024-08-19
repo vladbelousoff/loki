@@ -57,7 +57,6 @@ namespace loki {
     void enqueue_request(RequestCallback&& callback);
 
     RequestCallback pop_next_request();
-    void process_next_request();
 
   private:
     MPQChain chain{};

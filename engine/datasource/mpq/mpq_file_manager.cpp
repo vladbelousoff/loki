@@ -62,20 +62,33 @@ loki::MPQFileManager::request_file(const std::filesystem::path& path, const File
 void
 loki::MPQFileManager::run()
 {
-  std::unique_lock<std::mutex> lock(requests_mutex);
-  while (running) {
-    cv.wait(lock, [this] {
-      return !requests.empty() || !running;
-    });
+  do {
+    RequestCallback request;
 
-    process_next_request();
-  }
+    {
+      std::unique_lock lock(requests_mutex);
+      cv.wait(lock, [this] {
+        return !requests.empty() || !running;
+      });
+
+      if (!running) {
+        break;
+      }
+
+      request = pop_next_request();
+    }
+
+    if (request) {
+      spdlog::info("Executing task...");
+      request();
+    }
+  } while (true);
 }
 
 void
 loki::MPQFileManager::stop()
 {
-  std::lock_guard<std::mutex> lock(requests_mutex);
+  std::lock_guard lock(requests_mutex);
 
   running = false;
   while (!requests.empty()) {
@@ -91,16 +104,6 @@ loki::MPQFileManager::enqueue_request(loki::MPQFileManager::RequestCallback&& ca
   std::lock_guard lock(requests_mutex);
   requests.emplace(callback);
   cv.notify_one();
-}
-
-void
-loki::MPQFileManager::process_next_request()
-{
-  auto&& request = pop_next_request();
-  if (request) {
-    spdlog::info("Executing task...");
-    request();
-  }
 }
 
 loki::MPQFileManager::RequestCallback

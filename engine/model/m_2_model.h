@@ -22,6 +22,7 @@
 
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
+#include "m_2_model_view.h"
 
 namespace loki {
 
@@ -104,6 +105,7 @@ namespace loki {
     std::vector<char> model_name;
     std::vector<ModelVertex> raw_vertices;
     std::vector<u32> raw_indices;
+    std::vector<std::shared_ptr<M2ModelView>> model_views;
   };
 
 } // namespace loki
