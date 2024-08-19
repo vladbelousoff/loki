@@ -65,7 +65,6 @@ namespace loki {
     }
 
   private:
-    mutable std::shared_mutex load_mutex;
     std::atomic<AssetLoadingState> loading_state;
   };
 

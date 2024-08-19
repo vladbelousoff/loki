@@ -21,8 +21,6 @@
 void
 loki::Asset::wait_load_full(const MPQFile& file)
 {
-  std::unique_lock lock(load_mutex);
-
   file.read_all(buffer);
   on_fully_loaded(); // TODO: move this to the main/game thread
   loading_state = AssetLoadingState::LOADED_FULLY;
