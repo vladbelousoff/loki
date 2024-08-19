@@ -49,6 +49,7 @@ namespace loki {
 
     void request_load_full();
 
+  protected:
     virtual void on_fully_loaded() = 0;
 
   protected:
@@ -56,13 +57,13 @@ namespace loki {
     std::vector<char> buffer;
 
   protected:
-    void wait_load_full(const MPQFile& file);
-
-  protected:
     explicit Asset()
       : loading_state(AssetLoadingState::NOT_LOADED)
     {
     }
+
+  private:
+    void wait_load_full(const MPQFile& file);
 
   private:
     std::atomic<AssetLoadingState> loading_state;
