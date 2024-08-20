@@ -6,9 +6,10 @@ for better performance and maintainability.
 
 ## Requirements
 
+- Only Windows supported by far, mostly because of StormLib
 - C++ Compiler
-    - GCC 10.1 and later
-    - Clang 10 and later
+    - ~~GCC 10.1 and later~~
+    - ~~Clang 10 and later~~
     - Visual Studio 2019 version 16.8 and later
 - Meson
 - CMake
