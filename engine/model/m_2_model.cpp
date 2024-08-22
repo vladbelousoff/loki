@@ -21,9 +21,9 @@
 #include "glm/gtc/type_ptr.hpp"
 
 void
-loki::M2Model::on_fully_loaded()
+loki::M2Model::on_fully_loaded(const std::vector<char>& buffer)
 {
-  header = reinterpret_cast<Header*>(buffer.data());
+  auto* header = reinterpret_cast<const Header*>(buffer.data());
 
   model_name.resize(header->name.length);
   memcpy(model_name.data(), &buffer[header->name.offset], model_name.size());

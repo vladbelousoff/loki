@@ -55,11 +55,10 @@ namespace loki {
     void request_load_full();
 
   protected:
-    virtual void on_fully_loaded() = 0;
+    virtual void on_fully_loaded(const std::vector<char>& buffer) = 0;
 
   protected:
     StringID asset_path;
-    std::vector<char> buffer;
 
   protected:
     explicit Asset()

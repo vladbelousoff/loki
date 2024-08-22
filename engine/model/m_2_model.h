@@ -33,7 +33,7 @@ namespace loki {
     void draw() const;
 
   protected:
-    void on_fully_loaded() override;
+    void on_fully_loaded(const std::vector<char>& buffer) override;
 
   private:
 #pragma pack(push, 1)
@@ -105,7 +105,6 @@ namespace loki {
 
 #pragma pack(pop)
 
-    Header* header{};
     std::vector<char> model_name;
     std::vector<ModelVertex> raw_vertices;
     std::vector<std::shared_ptr<M2ModelView>> model_views;

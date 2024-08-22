@@ -118,7 +118,7 @@ namespace loki {
     friend class M2Model;
 
   protected:
-    void on_fully_loaded() override;
+    void on_fully_loaded(const std::vector<char>& buffer) override;
 
   private:
 #pragma pack(push, 1)
@@ -147,7 +147,6 @@ namespace loki {
 
 #pragma pack(pop)
 
-    Header* header = nullptr;
     std::vector<u16> raw_indices;
     std::vector<M2ModelGeosetHD> raw_geosets;
   };

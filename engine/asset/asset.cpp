@@ -22,17 +22,20 @@
 void
 loki::Asset::wait_load_full(const MPQFile& file)
 {
+  // Read file on the FileThread
+  std::vector<char> buffer;
   file.read_all(buffer);
 
   auto self = weak_from_this();
-  auto task = [self]() {
+  auto task = [self, buffer = std::move(buffer)]() {
     if (auto self_shared = self.lock()) {
-      self_shared->on_fully_loaded();
+      self_shared->on_fully_loaded(buffer);
       self_shared->loading_state = AssetLoadingState::LOADED_FULLY;
       spdlog::info("Loaded file '{}'", self_shared->asset_path.to_string());
     }
   };
 
+  // But process it in the MainThread
   MainThreadQueue::get_ref().add_task(std::move(task));
 }
 
