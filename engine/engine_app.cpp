@@ -57,6 +57,16 @@ loki::EngineApp::launch(const std::shared_ptr<EngineSettings>& _settings) -> int
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+#ifdef _WIN32
+    ImGuiIO& io = ImGui::GetIO();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+      GLFWwindow* backup_current_context = glfwGetCurrentContext();
+      ImGui::UpdatePlatformWindows();
+      ImGui::RenderPlatformWindowsDefault();
+      glfwMakeContextCurrent(backup_current_context);
+    }
+#endif
+
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
@@ -117,6 +127,9 @@ loki::EngineApp::on_init()
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+#ifdef _WIN32
+  io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+#endif
 
   // Setup Dear ImGui style
   ImGui::StyleColorsLight();
