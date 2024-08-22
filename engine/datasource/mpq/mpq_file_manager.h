@@ -21,7 +21,7 @@
 #include <mutex>
 #include <queue>
 
-#include "engine/string_manager.h"
+#include "engine/utils/string_manager.h"
 #include "mpq_chain.h"
 #include "mpq_file.h"
 

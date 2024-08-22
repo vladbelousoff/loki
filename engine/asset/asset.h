@@ -18,7 +18,7 @@
 #pragma once
 
 #include "engine/datasource/mpq/mpq_file.h"
-#include "engine/string_manager.h"
+#include "engine/utils/string_manager.h"
 #include "engine/utils/strings.h"
 
 #include <filesystem>

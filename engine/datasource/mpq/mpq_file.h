@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "engine/string_manager.h"
+#include "engine/utils/string_manager.h"
 #include "engine/utils/types.h"
 #include "mpq_archive.h"
 

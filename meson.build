@@ -33,7 +33,7 @@ endif
 sources = [
     'main.cpp',
     'engine/engine_app.cpp',
-    'engine/string_manager.cpp',
+    'engine/utils/string_manager.cpp',
     'engine/utils/big_num.cpp',
     'engine/utils/byte_buffer.cpp',
     'engine/crypto/crypto_random.cpp',
