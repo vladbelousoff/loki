@@ -36,6 +36,8 @@ struct
   float phi{ 1.08f }, theta{ 5.8f };
 } camera;
 
+glm::vec3 light_position(0.0, -0.2, 0.2);
+
 static std::string default_shader_vert =
     "#version 330 core\n"
     "layout (location = 0) in vec3 a_position;\n"
@@ -58,9 +60,9 @@ static std::string default_shader_frag =
     "in vec2 texcoord;\n"
     "out vec4 color;\n"
     "uniform sampler2D u_texture;\n"
+    "uniform vec3 u_light_position;\n"
     "void main() {\n"
-    "  vec3 norm = normalize(normal);\n"
-    "  float lighting = max(dot(norm, vec3(0.0, -0.2, 0.2)), 0.0);\n"
+    "  float lighting = max(dot(normalize(normal), normalize(u_light_position)), 0.0);\n"
     "  vec4 tex_color = texture(u_texture, texcoord);\n"
     "  color = vec4(vec3(1.0, 1.0, 1.0) * lighting, tex_color.a);\n"
     "}\n";
@@ -215,7 +217,7 @@ GameApp::on_update()
 
   loki::ShaderManager::use_program(prog, [this](const loki::UniformManager& manager) {
     manager.set_uniform("u_projection", projection);
-    manager.set_uniform("u_time", 0);
+    manager.set_uniform("u_light_position", light_position);
   });
 }
 
@@ -226,6 +228,10 @@ GameApp::on_gui()
     ImGui::SliderFloat("Distance", &camera.distance_to_origin, 0.0f, 100.0f);
     ImGui::SliderFloat("Phi", &camera.phi, 0.0f, glm::pi<float>() * 2.f);
     ImGui::SliderFloat("Theta", &camera.theta, 0.0f, glm::pi<float>() * 2.f);
+
+    ImGui::SliderFloat("Light X", &light_position.x, -1.0f, 1.0f);
+    ImGui::SliderFloat("Light Y", &light_position.y, -1.0f, 1.0f);
+    ImGui::SliderFloat("Light Z", &light_position.z, -1.0f, 1.0f);
 
     static char host[32] = "localhost";
     ImGui::InputText("Host", host, sizeof(host));

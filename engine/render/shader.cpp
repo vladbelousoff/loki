@@ -88,6 +88,12 @@ loki::UniformManager::set_uniform(std::string_view name, float value) const -> v
 }
 
 auto
+loki::UniformManager::set_uniform(std::string_view name, const glm::vec3& vec) const -> void
+{
+  glUniform3fv(glGetUniformLocation(handle.id, name.data()), 1, glm::value_ptr(vec));
+}
+
+auto
 loki::UniformManager::set_uniform(std::string_view name, const glm::mat4& mat) const -> void
 {
   glUniformMatrix4fv(glGetUniformLocation(handle.id, name.data()), 1, GL_FALSE, glm::value_ptr(mat));

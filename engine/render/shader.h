@@ -61,6 +61,7 @@ namespace loki {
 
   public:
     auto set_uniform(std::string_view name, float value) const -> void;
+    auto set_uniform(std::string_view name, const glm::vec3& vec) const -> void;
     auto set_uniform(std::string_view name, const glm::mat4& mat) const -> void;
 
   private:
