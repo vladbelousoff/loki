@@ -35,7 +35,7 @@ loki::M2ModelView::on_fully_loaded()
   spdlog::info("Loaded indices: {}", raw_indices.size());
 
   // Render ops
-  const M2ModelGeoset* ops = reinterpret_cast<M2ModelGeoset*>(buffer.data() + header->sub.offset);
+  const M2ModelGeoset* ops = reinterpret_cast<M2ModelGeoset*>(&buffer[header->sub.offset]);
 
   u32 istart = 0;
   for (u32 i = 0; i < header->sub.number; ++i) {

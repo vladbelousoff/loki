@@ -32,17 +32,108 @@
 
 struct
 {
-  float distance_to_origin{ 6.7f };
-  float phi{ 5.182f }, theta{ 5.716f };
+  float distance_to_origin{ 3.45f };
+  float phi{ 0.6f }, theta{ 2.7f };
 } camera;
+
+static std::string default_shader_vert =
+    "#version 330 core\n"
+    "layout (location = 0) in vec3 a_position;\n"
+    "layout (location = 1) in vec3 a_normal;\n"
+    "layout (location = 2) in vec2 a_texcoord;\n"
+    "uniform mat4 u_model;\n"
+    "uniform mat4 u_view;\n"
+    "uniform mat4 u_projection;\n"
+    "out vec3 normal;\n"
+    "out vec2 texcoord;\n"
+    "void main() {\n"
+    "  normal = mat3(transpose(inverse(u_model))) * a_normal;\n"
+    "  gl_Position = u_projection * u_view * u_model * vec4(a_position, 1.0f);\n"
+    "  texcoord = a_texcoord;\n"
+    "}\n";
+
+static std::string default_shader_frag =
+    "#version 330 core\n"
+    "in vec3 normal;\n"
+    "in vec2 texcoord;\n"
+    "out vec4 color;\n"
+    "uniform sampler2D u_texture;\n"
+    "void main() {\n"
+    "  vec3 norm = normalize(normal);\n"
+    "  float lighting = max(dot(norm, vec3(0.0, -0.2, 0.2)), 0.0);\n"
+    "  vec4 tex_color = texture(u_texture, texcoord);\n"
+    "  color = vec4(vec3(1.0, 1.0, 1.0) * lighting, tex_color.a);\n"
+    "}\n";
+
+struct Vertex
+{
+  float x, y, z;
+};
+
+std::vector<Vertex>
+generate_grid_vertices(float size, int n)
+{
+  std::vector<Vertex> grid_vertices;
+
+  // Calculate the step size between each grid cell
+  float step = size / (float)n;
+
+  // Generate vertices
+  for (int i = 0; i <= n; ++i) {
+    for (int j = 0; j <= n; ++j) {
+      Vertex v{};
+      v.x = -size / 2.0f + (float)j * step;
+      v.y = 0.0f;
+      v.z = -size / 2.0f + (float)i * step;
+      grid_vertices.push_back(v);
+    }
+  }
+
+  return grid_vertices;
+}
+
+std::vector<GLuint>
+generate_grid_indices(int n)
+{
+  std::vector<GLuint> grid_indices;
+
+  // Generate indices for each quad
+  for (int i = 0; i < n; ++i) {
+    for (int j = 0; j < n; ++j) {
+      GLuint top_left = i * (n + 1) + j;
+      GLuint top_right = top_left + 1;
+      GLuint bottom_left = (i + 1) * (n + 1) + j;
+      GLuint bottom_right = bottom_left + 1;
+
+      // First triangle of the quad
+      grid_indices.push_back(top_left);
+      grid_indices.push_back(bottom_left);
+      grid_indices.push_back(top_right);
+
+      // Second triangle of the quad
+      grid_indices.push_back(top_right);
+      grid_indices.push_back(bottom_left);
+      grid_indices.push_back(bottom_right);
+    }
+  }
+
+  return grid_indices;
+}
+
+GLuint vao;
+GLuint vbo;
+GLuint ebo;
+std::vector<Vertex> vertices;
+std::vector<GLuint> indices;
 
 GameApp::~GameApp()
 {
   loki::MPQFileManager::get_ref().term();
 }
 
-std::filesystem::path model_path = R"(Character\Draenei\Female\DraeneiFemale.M2)";
-auto draenei_female = loki::M2Model::create(model_path);
+// std::filesystem::path model_path = R"(Character\Draenei\Female\DraeneiFemale.M2)";
+std::filesystem::path model_path = R"(Creature\Akama\Akama.M2)";
+auto m2_model = loki::M2Model::create(model_path);
 
 bool
 GameApp::on_init()
@@ -53,8 +144,43 @@ GameApp::on_init()
 
   sockpp::initialize();
 
+  frag = loki::ShaderManager::create_shader(default_shader_frag, loki::ShaderType::FRAG);
+  vert = loki::ShaderManager::create_shader(default_shader_vert, loki::ShaderType::VERT);
+  prog = loki::ShaderManager::create_program(vert, frag);
+
   loki::MPQFileManager::get_ref().init(get_root_path() / "data");
-  draenei_female->request_load_full();
+  m2_model->request_load_full();
+
+  glGenVertexArrays(1, &vao);
+  glGenBuffers(1, &vbo);
+  glGenBuffers(1, &ebo);
+
+  // Bind VAO
+  glBindVertexArray(vao);
+
+  constexpr int side_n = 32;
+  vertices = generate_grid_vertices(1.f, side_n);
+  indices = generate_grid_indices(side_n);
+
+  // Bind VBO and copy vertices data
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)(vertices.size() * sizeof(Vertex)), vertices.data(), GL_STATIC_DRAW);
+
+  // Bind EBO and copy indices data
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)(indices.size() * sizeof(GLuint)), indices.data(), GL_STATIC_DRAW);
+
+  // Set vertex attribute pointers
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)nullptr);
+  glEnableVertexAttribArray(0);
+
+  // Unbind VAO, VBO, and EBO
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
 
   return true;
 }
@@ -72,22 +198,35 @@ GameApp::on_update()
   loki::MainThreadQueue::get_ref().perform_all_tasks();
 
   float x = camera.distance_to_origin * glm::sin(camera.phi) * glm::cos(camera.theta);
-  float y = camera.distance_to_origin * glm::cos(camera.phi);
-  float z = camera.distance_to_origin * glm::sin(camera.phi) * glm::sin(camera.theta);
+  float y = camera.distance_to_origin * glm::sin(camera.phi) * glm::sin(camera.theta);
+  float z = camera.distance_to_origin * glm::cos(camera.phi);
 
-  view = glm::lookAt(glm::vec3(x, y, z), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+  view = glm::lookAt(glm::vec3(x, y, z), glm::vec3(0, 0, 1), glm::vec3(0, 0, 1));
+
+  loki::ShaderManager::use_program(prog, [this](const loki::UniformManager& manager) {
+    manager.set_uniform(loki::StringID{ "u_view" }, view);
+  });
 
   glm::ivec2 window_size;
   glfwGetWindowSize(get_window(), &window_size.x, &window_size.y);
   glViewport(0, 0, window_size.x, window_size.y);
 
   projection = glm::perspective(glm::radians(45.0f), (float)window_size.x / (float)window_size.y, 0.1f, 100.0f);
+
+  loki::ShaderManager::use_program(prog, [this](const loki::UniformManager& manager) {
+    manager.set_uniform(loki::StringID{ "u_projection" }, projection);
+    manager.set_uniform(loki::StringID{ "u_time" }, 0);
+  });
 }
 
 void
 GameApp::on_gui()
 {
-  if (ImGui::Begin("Auth")) {
+  if (ImGui::Begin("Settings")) {
+    ImGui::SliderFloat("Distance", &camera.distance_to_origin, 0.0f, 100.0f);
+    ImGui::SliderFloat("Phi", &camera.phi, 0.0f, glm::pi<float>() * 2.f);
+    ImGui::SliderFloat("Theta", &camera.theta, 0.0f, glm::pi<float>() * 2.f);
+
     static char host[32] = "localhost";
     ImGui::InputText("Host", host, sizeof(host));
     static int port = 3724;
@@ -148,4 +287,22 @@ GameApp::on_render()
 {
   glClearColor(background.r, background.g, background.b, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  glCullFace(GL_BACK);
+  glDisable(GL_CULL_FACE);
+
+  loki::ShaderManager::use_program(prog, [this](const loki::UniformManager& manager) {
+    manager.set_uniform(loki::StringID{ "u_model" }, model);
+
+#if 0
+    glBindVertexArray(vao);
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, nullptr);
+
+    glBindVertexArray(0);
+#endif
+
+    m2_model->draw();
+  });
 }

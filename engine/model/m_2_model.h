@@ -17,17 +17,21 @@
 
 #pragma once
 
+#include "m_2_model_view.h"
+
+#include "GL/glew.h"
 #include "engine/asset/asset.h"
 #include "engine/utils/types.h"
-
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
-#include "m_2_model_view.h"
 
 namespace loki {
 
   class M2Model : public AssetWrapper<M2Model>
   {
+  public:
+    void draw() const;
+
   protected:
     void on_fully_loaded() override;
 

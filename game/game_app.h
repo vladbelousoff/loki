@@ -46,5 +46,8 @@ private:
   glm::mat4 projection{};
   std::shared_ptr<loki::AuthSession> auth_session;
   std::shared_ptr<loki::WorldSession> world_session;
+  loki::ShaderHandle frag;
+  loki::ShaderHandle vert;
+  loki::ProgramHandle prog;
 };
 

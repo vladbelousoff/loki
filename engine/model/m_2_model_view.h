@@ -148,7 +148,7 @@ namespace loki {
 #pragma pack(pop)
 
     Header* header = nullptr;
-    std::vector<u32> raw_indices;
+    std::vector<u16> raw_indices;
     std::vector<M2ModelGeosetHD> raw_geosets;
   };
 

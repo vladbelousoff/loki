@@ -17,6 +17,9 @@
 
 #include "m_2_model.h"
 
+#include "GL/glew.h"
+#include "glm/gtc/type_ptr.hpp"
+
 void
 loki::M2Model::on_fully_loaded()
 {
@@ -28,7 +31,7 @@ loki::M2Model::on_fully_loaded()
   spdlog::info("Loaded model name: {}", model_name.data());
 
   raw_vertices.resize(header->vertices.number);
-  memcpy(raw_vertices.data(), &buffer[header->vertices.offset], raw_vertices.size());
+  memcpy(raw_vertices.data(), &buffer[header->vertices.offset], raw_vertices.size() * sizeof(ModelVertex));
 
   spdlog::info("Loaded vertices: {}", header->vertices.number);
   spdlog::info("Number of views: {}", header->number_of_views);
@@ -41,4 +44,81 @@ loki::M2Model::on_fully_loaded()
     model_view->request_load_full();
     model_views.push_back(std::move(model_view));
   }
+}
+
+void
+loki::M2Model::draw() const
+{
+  if (!is_loaded()) {
+    return;
+  }
+
+  if (model_views.empty() || !model_views[0] || !model_views[0]->is_loaded()) {
+    return;
+  }
+
+  const auto& model_view = model_views[0];
+  if (model_view->raw_geosets.empty()) {
+    return;
+  }
+
+  GLuint vao;
+  glGenVertexArrays(1, &vao);
+  glBindVertexArray(vao);
+
+  GLuint vbuf, nbuf, tbuf;
+
+  glGenBuffers(1, &vbuf);
+  glGenBuffers(1, &tbuf);
+  glGenBuffers(1, &nbuf);
+
+  std::vector<glm::vec3> vertices;
+  std::vector<glm::vec3> normals;
+  std::vector<glm::vec2> texcoords;
+
+  for (auto& vertex : raw_vertices) {
+    vertices.push_back(vertex.pos);
+    normals.push_back(glm::normalize(vertex.normal));
+    texcoords.push_back(vertex.texcoords);
+  }
+
+  // Upload positions
+  glBindBuffer(GL_ARRAY_BUFFER, vbuf);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
+  glEnableVertexAttribArray(0);
+
+  // Upload normals
+  glBindBuffer(GL_ARRAY_BUFFER, nbuf);
+  glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
+  glEnableVertexAttribArray(1);
+
+  // Upload texture coordinates
+  glBindBuffer(GL_ARRAY_BUFFER, tbuf);
+  glBufferData(GL_ARRAY_BUFFER, texcoords.size() * sizeof(glm::vec2), texcoords.data(), GL_STATIC_DRAW);
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
+  glEnableVertexAttribArray(2);
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+  // glDrawArrays(GL_POINTS, 0, vertices.size());
+
+  for (const auto& geoset : model_view->raw_geosets) {
+    if (!geoset.display) {
+      continue;
+    }
+
+    glDrawRangeElements(GL_TRIANGLES, geoset.vstart, geoset.vstart + geoset.vcount, geoset.icount, GL_UNSIGNED_SHORT, &model_view->raw_indices[geoset.istart]);
+  }
+
+  glBindVertexArray(0);
+
+  glDeleteBuffers(1, &nbuf);
+  glDeleteBuffers(1, &vbuf);
+  glDeleteBuffers(1, &tbuf);
+
+  glDeleteVertexArrays(1, &vao);
 }

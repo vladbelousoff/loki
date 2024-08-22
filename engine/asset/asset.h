@@ -47,6 +47,11 @@ namespace loki {
       return loading_state;
     }
 
+    auto is_loaded() const -> bool
+    {
+      return get_loading_state() == AssetLoadingState::LOADED_FULLY;
+    }
+
     void request_load_full();
 
   protected:
