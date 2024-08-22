@@ -44,6 +44,52 @@ loki::M2Model::on_fully_loaded(const std::vector<char>& buffer)
     model_view->request_load_full();
     model_views.push_back(std::move(model_view));
   }
+
+  // Probably we can get rid of it, but for now let's live with these guys
+  std::vector<glm::vec3> vertices;
+  std::vector<glm::vec3> normals;
+  std::vector<glm::vec2> texcoords;
+
+  for (auto& vertex : raw_vertices) {
+    vertices.push_back(vertex.pos);
+    normals.push_back(glm::normalize(vertex.normal));
+    texcoords.push_back(vertex.texcoords);
+  }
+
+  // That would be nice to delete all these buffers in the destructor, but
+  // I don't want to call OpenGL-related things automatically in random places
+  glGenVertexArrays(1, &vao);
+  glBindVertexArray(vao);
+
+  glGenBuffers(1, &vbuf);
+  glGenBuffers(1, &tbuf);
+  glGenBuffers(1, &nbuf);
+
+  // Bind current VAO
+  glBindVertexArray(vao);
+
+  // TODO: Note that glVertexAttribPointer indices here are hardcoded, but probably we can get it from the shader
+
+  // Upload positions
+  glBindBuffer(GL_ARRAY_BUFFER, vbuf);
+  glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)(vertices.size() * sizeof(glm::vec3)), vertices.data(), GL_STATIC_DRAW);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+  glEnableVertexAttribArray(0);
+
+  // Upload normals
+  glBindBuffer(GL_ARRAY_BUFFER, nbuf);
+  glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)(normals.size() * sizeof(glm::vec3)), normals.data(), GL_STATIC_DRAW);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+  glEnableVertexAttribArray(1);
+
+  // Upload texture coordinates
+  glBindBuffer(GL_ARRAY_BUFFER, tbuf);
+  glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)(texcoords.size() * sizeof(glm::vec2)), texcoords.data(), GL_STATIC_DRAW);
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+  glEnableVertexAttribArray(2);
+
+  // Clean the current buffer id
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void
@@ -62,63 +108,18 @@ loki::M2Model::draw() const
     return;
   }
 
-  GLuint vao;
-  glGenVertexArrays(1, &vao);
+  // Bind current VAO
   glBindVertexArray(vao);
-
-  GLuint vbuf, nbuf, tbuf;
-
-  glGenBuffers(1, &vbuf);
-  glGenBuffers(1, &tbuf);
-  glGenBuffers(1, &nbuf);
-
-  std::vector<glm::vec3> vertices;
-  std::vector<glm::vec3> normals;
-  std::vector<glm::vec2> texcoords;
-
-  for (auto& vertex : raw_vertices) {
-    vertices.push_back(vertex.pos);
-    normals.push_back(glm::normalize(vertex.normal));
-    texcoords.push_back(vertex.texcoords);
-  }
-
-  // Upload positions
-  glBindBuffer(GL_ARRAY_BUFFER, vbuf);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
-  glEnableVertexAttribArray(0);
-
-  // Upload normals
-  glBindBuffer(GL_ARRAY_BUFFER, nbuf);
-  glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
-  glEnableVertexAttribArray(1);
-
-  // Upload texture coordinates
-  glBindBuffer(GL_ARRAY_BUFFER, tbuf);
-  glBufferData(GL_ARRAY_BUFFER, texcoords.size() * sizeof(glm::vec2), texcoords.data(), GL_STATIC_DRAW);
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
-  glEnableVertexAttribArray(2);
-
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-  // glDrawArrays(GL_POINTS, 0, vertices.size());
 
   for (const auto& geoset : model_view->raw_geosets) {
     if (!geoset.display) {
       continue;
     }
 
+    // Currently we don't have a EBO, and we get the indices from RAM
     glDrawRangeElements(GL_TRIANGLES, geoset.vstart, geoset.vstart + geoset.vcount, geoset.icount, GL_UNSIGNED_SHORT, &model_view->raw_indices[geoset.istart]);
   }
 
+  // Unbind current VAO
   glBindVertexArray(0);
-
-  glDeleteBuffers(1, &nbuf);
-  glDeleteBuffers(1, &vbuf);
-  glDeleteBuffers(1, &tbuf);
-
-  glDeleteVertexArrays(1, &vao);
 }

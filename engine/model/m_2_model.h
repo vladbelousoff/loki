@@ -108,6 +108,8 @@ namespace loki {
     std::vector<char> model_name;
     std::vector<ModelVertex> raw_vertices;
     std::vector<std::shared_ptr<M2ModelView>> model_views;
+    GLuint vao;
+    GLuint vbuf, nbuf, tbuf;
   };
 
 } // namespace loki
