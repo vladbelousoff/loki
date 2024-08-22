@@ -32,8 +32,8 @@
 
 struct
 {
-  float distance_to_origin{ 3.45f };
-  float phi{ 0.6f }, theta{ 2.7f };
+  float distance_to_origin{ 5.f };
+  float phi{ 1.08f }, theta{ 5.8f };
 } camera;
 
 static std::string default_shader_vert =
@@ -204,7 +204,7 @@ GameApp::on_update()
   view = glm::lookAt(glm::vec3(x, y, z), glm::vec3(0, 0, 1), glm::vec3(0, 0, 1));
 
   loki::ShaderManager::use_program(prog, [this](const loki::UniformManager& manager) {
-    manager.set_uniform(loki::StringID{ "u_view" }, view);
+    manager.set_uniform("u_view", view);
   });
 
   glm::ivec2 window_size;
@@ -214,8 +214,8 @@ GameApp::on_update()
   projection = glm::perspective(glm::radians(45.0f), (float)window_size.x / (float)window_size.y, 0.1f, 100.0f);
 
   loki::ShaderManager::use_program(prog, [this](const loki::UniformManager& manager) {
-    manager.set_uniform(loki::StringID{ "u_projection" }, projection);
-    manager.set_uniform(loki::StringID{ "u_time" }, 0);
+    manager.set_uniform("u_projection", projection);
+    manager.set_uniform("u_time", 0);
   });
 }
 
@@ -292,7 +292,7 @@ GameApp::on_render()
   glDisable(GL_CULL_FACE);
 
   loki::ShaderManager::use_program(prog, [this](const loki::UniformManager& manager) {
-    manager.set_uniform(loki::StringID{ "u_model" }, model);
+    manager.set_uniform("u_model", model);
 
 #if 0
     glBindVertexArray(vao);

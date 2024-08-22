@@ -17,13 +17,12 @@
 
 #pragma once
 
+#include "glm/fwd.hpp"
+#include "spdlog/spdlog.h"
+
 #include <cstdint>
 #include <format>
-#include <spdlog/spdlog.h>
-#include <string>
-
-#include "engine/string_manager.h"
-#include "glm/fwd.hpp"
+#include <string_view>
 
 namespace loki {
 
@@ -61,8 +60,8 @@ namespace loki {
     }
 
   public:
-    auto set_uniform(StringID name, float value) const -> void;
-    auto set_uniform(StringID name, const glm::mat4& mat) const -> void;
+    auto set_uniform(std::string_view name, float value) const -> void;
+    auto set_uniform(std::string_view name, const glm::mat4& mat) const -> void;
 
   private:
     ProgramHandle handle;
@@ -71,7 +70,7 @@ namespace loki {
   struct ShaderManager
   {
     // general stuff
-    static auto create_shader(const std::string& source, ShaderType type) -> ShaderHandle;
+    static auto create_shader(std::string_view source, ShaderType type) -> ShaderHandle;
     static auto create_program(ShaderHandle vert, ShaderHandle frag) -> ProgramHandle;
     static auto use_program(ProgramHandle handle, const std::function<void(const UniformManager& manager)>& callback) -> void;
   };

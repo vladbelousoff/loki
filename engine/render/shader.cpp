@@ -23,7 +23,7 @@
 #include <vector>
 
 auto
-loki::ShaderManager::create_shader(const std::string& source, ShaderType type) -> loki::ShaderHandle
+loki::ShaderManager::create_shader(std::string_view source, ShaderType type) -> loki::ShaderHandle
 {
   uint32_t shader_id;
   switch (type) {
@@ -77,18 +77,18 @@ auto
 loki::ShaderManager::use_program(loki::ProgramHandle handle, const std::function<void(const UniformManager& manager)>& callback) -> void
 {
   glUseProgram(handle.id);
-  callback(UniformManager{ handle });
+  callback(UniformManager(handle));
   glUseProgram(0);
 }
 
 auto
-loki::UniformManager::set_uniform(loki::StringID name, float value) const -> void
+loki::UniformManager::set_uniform(std::string_view name, float value) const -> void
 {
-  glUniform1f(glGetUniformLocation(handle.id, name.to_string().c_str()), value);
+  glUniform1f(glGetUniformLocation(handle.id, name.data()), value);
 }
 
 auto
-loki::UniformManager::set_uniform(loki::StringID name, const glm::mat4& mat) const -> void
+loki::UniformManager::set_uniform(std::string_view name, const glm::mat4& mat) const -> void
 {
-  glUniformMatrix4fv(glGetUniformLocation(handle.id, name.to_string().c_str()), 1, GL_FALSE, glm::value_ptr(mat));
+  glUniformMatrix4fv(glGetUniformLocation(handle.id, name.data()), 1, GL_FALSE, glm::value_ptr(mat));
 }
