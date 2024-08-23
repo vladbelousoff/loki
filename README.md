@@ -6,7 +6,7 @@ for better performance and maintainability.
 
 ## Requirements
 
-- Only Windows supported by far, mostly because of StormLib
+- Only Windows is supported by far, mostly because of StormLib
 - C++ Compiler
     - ~~GCC 10.1 and later~~
     - ~~Clang 10 and later~~
@@ -19,6 +19,7 @@ for better performance and maintainability.
 
 ```bash
 meson setup builddir
+cd builddir
 meson compile
 ```
 
