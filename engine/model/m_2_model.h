@@ -27,6 +27,48 @@
 
 namespace loki {
 
+  enum class TextureType : u32
+  {
+    FILENAME = 0,
+    BODY,
+    CAPE,
+    ITEM = CAPE,
+    ARMOR_REFLECT,
+    HAIR = 6,
+    FUR = 8,
+    INVENTORY_ART_1,
+    QUILL,
+    GAME_OBJECT_1,
+    GAME_OBJECT_2,
+    GAME_OBJECT_3,
+    TEXTURE_15,
+    TEXTURE_16,
+    TEXTURE_17,
+  };
+
+#pragma pack(push, 1)
+
+  struct ModelVertex
+  {
+    glm::vec3 pos;
+    u8 weights[4];
+    u8 bones[4];
+    glm::vec3 normal;
+    glm::vec2 texcoords;
+    int unk1, unk2; // always 0,0 so this is probably unused
+  };
+
+  constexpr int TextureMaxCount = 32;
+
+  struct M2ModelTextureDef
+  {
+    TextureType type;
+    u32 flags;
+    M2Field name;
+  };
+
+#pragma pack(pop)
+
   class M2Model : public AssetWrapper<M2Model>
   {
   public:
@@ -38,16 +80,6 @@ namespace loki {
   private:
 #pragma pack(push, 1)
 
-    struct ModelVertex
-    {
-      glm::vec3 pos;
-      u8 weights[4];
-      u8 bones[4];
-      glm::vec3 normal;
-      glm::vec2 texcoords;
-      int unk1, unk2; // always 0,0 so this is probably unused
-    };
-
     struct Sphere
     {
       glm::vec3 min;
@@ -55,52 +87,41 @@ namespace loki {
       float radius;
     };
 
-    struct Record
-    {
-      union
-      {
-        u32 number;
-        u32 length;
-      };
-
-      u32 offset;
-    };
-
     struct Header
     {
       u8 id[4];
       u8 version[4];
-      Record name;
+      M2Field name;
       u32 global_model_flags;
-      Record global_sequence;
-      Record animations;
-      Record animation_lookup;
-      Record bones;
-      Record key_bone_lookup;
-      Record vertices;
+      M2Field global_sequence;
+      M2Field animations;
+      M2Field animation_lookup;
+      M2Field bones;
+      M2Field key_bone_lookup;
+      M2Field vertices;
       u32 number_of_views;
-      Record colors;
-      Record textures;
-      Record transparency;
-      Record tex_anims;
-      Record tex_lookup;
-      Record tex_unit_lookup;
-      Record transparency_lookup;
-      Record tex_anim_lookup;
+      M2Field colors;
+      M2Field textures;
+      M2Field transparency;
+      M2Field tex_anims;
+      M2Field tex_lookup;
+      M2Field tex_unit_lookup;
+      M2Field transparency_lookup;
+      M2Field tex_anim_lookup;
       Sphere collision_sphere;
       Sphere bound_sphere;
-      Record bounding_triangles;
-      Record bounding_vertices;
-      Record bounding_normals;
-      Record attachments;
-      Record attach_lookup;
-      Record events;
-      Record lights;
-      Record cameras;
-      Record camera_lookup;
-      Record ribbon_emitters;
-      Record particles_emitters;
-      Record texture_combiner_combos;
+      M2Field bounding_triangles;
+      M2Field bounding_vertices;
+      M2Field bounding_normals;
+      M2Field attachments;
+      M2Field attach_lookup;
+      M2Field events;
+      M2Field lights;
+      M2Field cameras;
+      M2Field camera_lookup;
+      M2Field ribbon_emitters;
+      M2Field particles_emitters;
+      M2Field texture_combiner_combos;
     };
 
 #pragma pack(pop)
@@ -109,7 +130,9 @@ namespace loki {
     std::vector<ModelVertex> raw_vertices;
     std::vector<std::shared_ptr<M2ModelView>> model_views;
     GLuint vao;
-    GLuint vbuf, nbuf, tbuf;
+    GLuint vbuf;
+    GLuint nbuf;
+    GLuint tbuf;
   };
 
 } // namespace loki

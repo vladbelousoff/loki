@@ -39,10 +39,20 @@ loki::M2Model::on_fully_loaded(const std::vector<char>& buffer)
   for (u32 i = 0; i < header->number_of_views; ++i) {
     auto path = std::filesystem::path(asset_path.to_string());
     path.replace_extension("");
-    auto model_view_path = std::format("{}0{}.skin", path.string(), i);
+    auto model_view_path = std::format("{}{:02}.skin", path.string(), i);
     auto model_view = M2ModelView::create(model_view_path);
     model_view->request_load_full();
     model_views.push_back(std::move(model_view));
+  }
+
+  spdlog::info("Number of textures: {}", header->textures.number);
+
+  auto* texture_def = reinterpret_cast<const M2ModelTextureDef*>(&buffer[header->textures.offset]);
+  for (u32 i = 0; i < header->textures.number; ++i) {
+    if (texture_def[i].type == TextureType::FILENAME) {
+      std::string texture_name = &buffer[texture_def[i].name.offset];
+      spdlog::info("Texture index: {}, name: {}", i, texture_name);
+    }
   }
 
   // Probably we can get rid of it, but for now let's live with these guys

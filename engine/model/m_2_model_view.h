@@ -25,6 +25,17 @@ namespace loki {
 
 #pragma pack(push, 1)
 
+  struct M2Field
+  {
+    union
+    {
+      u32 number;
+      u32 length;
+    };
+
+    u32 offset;
+  };
+
   struct M2ModelGeoset
   {
     u32 id;                      // mesh part id?
@@ -123,25 +134,14 @@ namespace loki {
   private:
 #pragma pack(push, 1)
 
-    struct Record
-    {
-      union
-      {
-        u32 number;
-        u32 length;
-      };
-
-      u32 offset;
-    };
-
     struct Header
     {
       char id[4]; // Signature
-      Record index;
-      Record tris;
-      Record props;
-      Record sub;
-      Record tex;
+      M2Field index;
+      M2Field tris;
+      M2Field props;
+      M2Field sub;
+      M2Field tex;
       i32 lod; // LOD bias?
     };
 
