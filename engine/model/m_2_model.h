@@ -21,6 +21,7 @@
 
 #include "GL/glew.h"
 #include "engine/asset/asset.h"
+#include "engine/texture/blp_texture.h"
 #include "engine/utils/types.h"
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
@@ -129,6 +130,7 @@ namespace loki {
     std::vector<char> model_name;
     std::vector<ModelVertex> raw_vertices;
     std::vector<std::shared_ptr<M2ModelView>> model_views;
+    std::vector<std::shared_ptr<BLPTexture>> textures;
     GLuint vao;
     GLuint vbuf;
     GLuint nbuf;

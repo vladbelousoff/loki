@@ -52,6 +52,9 @@ loki::M2Model::on_fully_loaded(const std::vector<char>& buffer)
     if (texture_def[i].type == TextureType::FILENAME) {
       std::string texture_name = &buffer[texture_def[i].name.offset];
       spdlog::info("Texture index: {}, name: {}", i, texture_name);
+      auto texture = BLPTexture::create(texture_name);
+      texture->request_load_full();
+      textures.push_back(std::move(texture));
     }
   }
 
