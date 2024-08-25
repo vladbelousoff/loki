@@ -67,67 +67,6 @@ static std::string default_shader_frag =
     "  color = vec4(tex_color.bgr, tex_color.a);\n"
     "}\n";
 
-struct Vertex
-{
-  float x, y, z;
-};
-
-std::vector<Vertex>
-generate_grid_vertices(float size, int n)
-{
-  std::vector<Vertex> grid_vertices;
-
-  // Calculate the step size between each grid cell
-  float step = size / (float)n;
-
-  // Generate vertices
-  for (int i = 0; i <= n; ++i) {
-    for (int j = 0; j <= n; ++j) {
-      Vertex v{};
-      v.x = -size / 2.0f + (float)j * step;
-      v.y = 0.0f;
-      v.z = -size / 2.0f + (float)i * step;
-      grid_vertices.push_back(v);
-    }
-  }
-
-  return grid_vertices;
-}
-
-std::vector<GLuint>
-generate_grid_indices(int n)
-{
-  std::vector<GLuint> grid_indices;
-
-  // Generate indices for each quad
-  for (int i = 0; i < n; ++i) {
-    for (int j = 0; j < n; ++j) {
-      GLuint top_left = i * (n + 1) + j;
-      GLuint top_right = top_left + 1;
-      GLuint bottom_left = (i + 1) * (n + 1) + j;
-      GLuint bottom_right = bottom_left + 1;
-
-      // First triangle of the quad
-      grid_indices.push_back(top_left);
-      grid_indices.push_back(bottom_left);
-      grid_indices.push_back(top_right);
-
-      // Second triangle of the quad
-      grid_indices.push_back(top_right);
-      grid_indices.push_back(bottom_left);
-      grid_indices.push_back(bottom_right);
-    }
-  }
-
-  return grid_indices;
-}
-
-GLuint vao;
-GLuint vbo;
-GLuint ebo;
-std::vector<Vertex> vertices;
-std::vector<GLuint> indices;
-
 GameApp::~GameApp()
 {
   loki::MPQFileManager::get_ref().term();
@@ -152,34 +91,6 @@ GameApp::on_init()
 
   loki::MPQFileManager::get_ref().init(get_root_path() / "data");
   m2_model->request_load_full();
-
-  glGenVertexArrays(1, &vao);
-  glGenBuffers(1, &vbo);
-  glGenBuffers(1, &ebo);
-
-  // Bind VAO
-  glBindVertexArray(vao);
-
-  constexpr int side_n = 32;
-  vertices = generate_grid_vertices(1.f, side_n);
-  indices = generate_grid_indices(side_n);
-
-  // Bind VBO and copy vertices data
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)(vertices.size() * sizeof(Vertex)), vertices.data(), GL_STATIC_DRAW);
-
-  // Bind EBO and copy indices data
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)(indices.size() * sizeof(GLuint)), indices.data(), GL_STATIC_DRAW);
-
-  // Set vertex attribute pointers
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)nullptr);
-  glEnableVertexAttribArray(0);
-
-  // Unbind VAO, VBO, and EBO
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindVertexArray(0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
@@ -301,16 +212,6 @@ GameApp::on_render()
 
   loki::ShaderManager::use_program(prog, [this](const loki::UniformManager& manager) {
     manager.set_uniform("u_model", model);
-
-#if 0
-    glBindVertexArray(vao);
-
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, nullptr);
-
-    glBindVertexArray(0);
-#endif
-
     m2_model->draw();
   });
 }
