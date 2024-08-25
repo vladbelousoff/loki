@@ -22,7 +22,6 @@ dependencies = [
     dependency('openssl'),
     dependency('pfr'),
     dependency('blp'),
-    dependency('freeimage'),
     dependency('squish'),
 ]
 
