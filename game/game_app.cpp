@@ -64,7 +64,7 @@ static std::string default_shader_frag =
     "void main() {\n"
     "  float lighting = max(dot(normalize(normal), normalize(u_light_position)), 0.0);\n"
     "  vec4 tex_color = texture(u_texture, texcoord);\n"
-    "  color = vec4(tex_color.rgb * lighting, tex_color.a);\n"
+    "  color = vec4(tex_color.bgr, tex_color.a);\n"
     "}\n";
 
 struct Vertex
@@ -134,7 +134,7 @@ GameApp::~GameApp()
 }
 
 // std::filesystem::path model_path = R"(Character\Draenei\Female\DraeneiFemale.M2)";
-std::filesystem::path model_path = R"(Creature\Akama\Akama.M2)";
+std::filesystem::path model_path = R"(Creature\ArthasLichKing\ArthasLichKing.M2)";
 auto m2_model = loki::M2Model::create(model_path);
 
 bool
@@ -229,9 +229,11 @@ GameApp::on_gui()
     ImGui::SliderFloat("Phi", &camera.phi, 0.0f, glm::pi<float>() * 2.f);
     ImGui::SliderFloat("Theta", &camera.theta, 0.0f, glm::pi<float>() * 2.f);
 
+#if 0
     ImGui::SliderFloat("Light X", &light_position.x, -1.0f, 1.0f);
     ImGui::SliderFloat("Light Y", &light_position.y, -1.0f, 1.0f);
     ImGui::SliderFloat("Light Z", &light_position.z, -1.0f, 1.0f);
+#endif
 
     static char host[32] = "localhost";
     ImGui::InputText("Host", host, sizeof(host));
