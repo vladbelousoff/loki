@@ -105,30 +105,17 @@ namespace loki {
       M2Field textures;
       M2Field transparency;
       M2Field tex_anims;
+      M2Field tex_replace;
+      M2Field tex_flags;
+      M2Field bone_lookup;
       M2Field tex_lookup;
-      M2Field tex_unit_lookup;
-      M2Field transparency_lookup;
-      M2Field tex_anim_lookup;
-      Sphere collision_sphere;
-      Sphere bound_sphere;
-      M2Field bounding_triangles;
-      M2Field bounding_vertices;
-      M2Field bounding_normals;
-      M2Field attachments;
-      M2Field attach_lookup;
-      M2Field events;
-      M2Field lights;
-      M2Field cameras;
-      M2Field camera_lookup;
-      M2Field ribbon_emitters;
-      M2Field particles_emitters;
-      M2Field texture_combiner_combos;
     };
 
 #pragma pack(pop)
 
     std::vector<char> model_name;
     std::vector<ModelVertex> raw_vertices;
+    std::vector<u16> raw_tex_lookup;
     std::vector<std::shared_ptr<M2ModelView>> model_views;
     std::vector<std::shared_ptr<BLPTexture>> textures;
     GLuint vao;

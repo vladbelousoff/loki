@@ -19,6 +19,7 @@
 
 #include "GL/glew.h"
 #include "glm/gtc/type_ptr.hpp"
+#include "libassert/assert.hpp"
 
 void
 loki::M2Model::on_fully_loaded(const std::vector<char>& buffer)
@@ -48,15 +49,20 @@ loki::M2Model::on_fully_loaded(const std::vector<char>& buffer)
   spdlog::info("Number of textures: {}", header->textures.number);
 
   auto* texture_def = reinterpret_cast<const M2ModelTextureDef*>(&buffer[header->textures.offset]);
+  textures.resize(header->textures.number);
+
   for (u32 i = 0; i < header->textures.number; ++i) {
     if (texture_def[i].type == TextureType::FILENAME) {
       std::string texture_name = &buffer[texture_def[i].name.offset];
       spdlog::info("Texture index: {}, name: {}", i, texture_name);
-      auto texture = BLPTexture::create(texture_name);
-      texture->request_load_full();
-      textures.push_back(std::move(texture));
+      textures[i] = BLPTexture::create(texture_name);
+      textures[i]->request_load_full();
     }
   }
+
+  auto* tex_lookup = reinterpret_cast<const u16*>(&buffer[header->tex_lookup.offset]);
+  raw_tex_lookup.resize(header->tex_lookup.number);
+  memcpy(raw_tex_lookup.data(), tex_lookup, header->tex_lookup.number * sizeof(u16));
 
   // Probably we can get rid of it, but for now let's live with these guys
   std::vector<glm::vec3> vertices;
@@ -121,16 +127,52 @@ loki::M2Model::draw() const
     return;
   }
 
+  // TODO: Create this array on every draw is not a good idea
+  std::vector<M2ModelRenderPass> render_passes;
+
+  for (u32 i = 0; i < model_view->header.tex.number; ++i) {
+    M2ModelRenderPass pass{};
+
+    ASSERT(i < model_view->raw_tex_units.size());
+    auto& tex_unit = model_view->raw_tex_units[i];
+
+    auto geoset = tex_unit.op;
+    pass.geoset = geoset;
+
+    ASSERT(tex_unit.texture_id < raw_tex_lookup.size());
+    pass.tex = raw_tex_lookup[tex_unit.texture_id];
+
+    render_passes.push_back(pass);
+  }
+
   // Bind current VAO
   glBindVertexArray(vao);
 
-  for (const auto& geoset : model_view->raw_geosets) {
-    if (!geoset.display) {
+  for (const auto& pass : render_passes) {
+    ASSERT(pass.tex >= 0 && pass.tex < textures.size());
+    auto& texture = textures[pass.tex];
+    ASSERT(texture);
+
+    if (!texture->is_loaded()) {
+      // Skip drawing for unloaded textures
       continue;
     }
 
+    // Bind the current texture
+    glBindTexture(GL_TEXTURE_2D, texture->id);
+
+    auto& geoset = model_view->raw_geosets[pass.geoset];
+
+    auto vstart = geoset.vstart;
+    auto vend = geoset.vstart + geoset.vcount;
+    auto icount = geoset.icount;
+    auto* indices = &model_view->raw_indices[geoset.istart];
+
     // Currently we don't have a EBO, and we get the indices from RAM
-    glDrawRangeElements(GL_TRIANGLES, geoset.vstart, geoset.vstart + geoset.vcount, geoset.icount, GL_UNSIGNED_SHORT, &model_view->raw_indices[geoset.istart]);
+    glDrawRangeElements(GL_TRIANGLES, vstart, vend, icount, GL_UNSIGNED_SHORT, indices);
+
+    // Unbid the texture
+    glBindTexture(GL_TEXTURE_2D, 0);
   }
 
   // Unbind current VAO

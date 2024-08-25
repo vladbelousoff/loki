@@ -24,6 +24,8 @@ namespace loki {
 
   class BLPTexture : public AssetWrapper<BLPTexture>
   {
+    friend class M2Model;
+
   protected:
     void on_fully_loaded(const std::vector<char>& buffer) override;
 

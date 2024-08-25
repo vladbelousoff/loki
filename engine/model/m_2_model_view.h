@@ -36,6 +36,30 @@ namespace loki {
     u32 offset;
   };
 
+  struct M2ModelRenderPass
+  {
+    i32 tex;
+    i32 geoset;
+  };
+
+  struct M2ModelTexUnit
+  {
+    // probably the texture units
+    // size always >=number of materials it seems
+    u16 flags;       // Usually 16 for static textures, and 0 for animated textures.
+    u16 shading;     // If set to 0x8000: shaders. Used in sky boxes to ditch the need for depth buffering. See below.
+    u16 op;          // Material this texture is part of (index into mat)
+    u16 op2;         // Always same as above?
+    i16 colorIndex;  // A Color out of the Colors-Block or -1 if none.
+    u16 flagsIndex;  // RenderFlags (index into render flags, TexFlags)
+    u16 texunit;     // Index into the texture unit lookup table.
+    u16 mode;        // See below.
+    u16 texture_id;  // Index into Texture lookup table
+    u16 texunit2;    // copy of texture unit value?
+    u16 trans_id;    // Index into transparency lookup table.
+    u16 tex_anim_id; // Index into uv animation lookup table.
+  };
+
   struct M2ModelGeoset
   {
     u32 id;                      // mesh part id?
@@ -147,8 +171,10 @@ namespace loki {
 
 #pragma pack(pop)
 
+    Header header;
     std::vector<u16> raw_indices;
     std::vector<M2ModelGeosetHD> raw_geosets;
+    std::vector<M2ModelTexUnit> raw_tex_units;
   };
 
 } // namespace loki

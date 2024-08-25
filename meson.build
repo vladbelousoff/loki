@@ -21,6 +21,9 @@ dependencies = [
     dependency('libssl'),
     dependency('openssl'),
     dependency('pfr'),
+    dependency('blp'),
+    dependency('freeimage'),
+    dependency('squish'),
 ]
 
 c_compiler = meson.get_compiler('c')
