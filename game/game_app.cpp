@@ -64,7 +64,7 @@ static std::string default_shader_frag =
     "void main() {\n"
     "  float lighting = max(dot(normalize(normal), normalize(u_light_position)), 0.0);\n"
     "  vec4 tex_color = texture(u_texture, texcoord);\n"
-    "  color = vec4(tex_color.bgr, tex_color.a);\n"
+    "  color = tex_color;\n"
     "}\n";
 
 GameApp::~GameApp()

@@ -38,7 +38,7 @@ loki::BLPTexture::on_fully_loaded(const std::vector<char>& buffer)
   GLuint tex_format = GL_TEXTURE_2D;
   glBindTexture(tex_format, id);
 
-  glTexImage2D(tex_format, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, raw_image_data);
+  glTexImage2D(tex_format, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, raw_image_data);
   glGenerateMipmap(tex_format);
 
   glTexParameteri(tex_format, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // Linear Filtering
