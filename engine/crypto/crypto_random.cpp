@@ -15,8 +15,6 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
-
 #include "crypto_random.h"
 #include "libassert/assert.hpp"
 
