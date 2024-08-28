@@ -19,13 +19,12 @@
 
 #include "engine/utils/types.h"
 #include "libassert/assert.hpp"
-#include "pfr.hpp"
 #include "sockpp/tcp_connector.h"
-#include "sockpp/version.h"
 #include "spdlog/spdlog.h"
 
 #include <string>
 #include <vector>
+#include <boost/pfr.hpp>
 
 namespace loki {
 
@@ -146,7 +145,7 @@ namespace loki {
   {
     static void load(ByteBuffer& buffer, T& value)
     {
-      pfr::for_each_field(value, [&buffer](auto& field) {
+      boost::pfr::for_each_field(value, [&buffer](auto& field) {
         LoadFieldHelper<typename std::remove_cvref<decltype(field)>::type>::load(buffer, field);
       });
     }
@@ -157,7 +156,7 @@ namespace loki {
   {
     static void save(ByteBuffer& buffer, T& value)
     {
-      pfr::for_each_field(value, [&buffer](auto& field) {
+      boost::pfr::for_each_field(value, [&buffer](auto& field) {
         SaveFieldHelper<typename std::remove_cvref<decltype(field)>::type>::save(buffer, field);
       });
     }

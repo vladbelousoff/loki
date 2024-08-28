@@ -67,7 +67,7 @@ loki::ShaderManager::create_program(loki::ShaderHandle vert, loki::ShaderHandle 
   glAttachShader(shader_program, frag.id);
   glLinkProgram(shader_program);
 
-  loki::ProgramHandle handle{};
+  ProgramHandle handle;
   handle.id = shader_program;
 
   return handle;

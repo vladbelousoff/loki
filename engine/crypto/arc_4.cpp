@@ -26,9 +26,9 @@ loki::ARC4::ARC4()
   cipher = EVP_CIPHER_fetch(nullptr, SN_rc4, nullptr);
 #else
   const EVP_CIPHER* cipher = EVP_rc4();
+  EVP_CIPHER_CTX_init(context);
 #endif
 
-  EVP_CIPHER_CTX_init(context);
   i32 result = EVP_EncryptInit_ex(context, cipher, nullptr, nullptr, nullptr);
   ASSERT(result == 1);
 }

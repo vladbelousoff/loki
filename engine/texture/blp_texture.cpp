@@ -18,8 +18,8 @@
 #include "blp_texture.h"
 
 #include "GL/glew.h"
-#include "blp.h"
 #include "libassert/assert.hpp"
+#include "../blpconverter-src/blp.h"
 
 void
 loki::BLPTexture::on_fully_loaded(const std::vector<char>& buffer)
