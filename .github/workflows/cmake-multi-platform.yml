@@ -25,22 +25,22 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         build_type: [Debug]
-        c_compiler: [gcc, clang, cl]
+        c_compiler: [gcc-13, clang-15, cl]
         include:
           - os: windows-latest
             c_compiler: cl
             cpp_compiler: cl
           - os: ubuntu-latest
-            c_compiler: gcc
-            cpp_compiler: g++
+            c_compiler: gcc-13
+            cpp_compiler: g++13
           - os: ubuntu-latest
-            c_compiler: clang
-            cpp_compiler: clang++
+            c_compiler: clang-15
+            cpp_compiler: clang++15
         exclude:
           - os: windows-latest
-            c_compiler: gcc
+            c_compiler: gcc-13
           - os: windows-latest
-            c_compiler: clang
+            c_compiler: clang-15
           - os: ubuntu-latest
             c_compiler: cl
 
@@ -51,27 +51,15 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install -y gcc-12 g++-12 clang-15 clang++-15
-
-    - name: Set default GCC and Clang versions
-      if: runner.os == 'Linux'
-      run: |
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 100
-        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 100
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-15 100
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-15 100
-        sudo update-alternatives --set gcc /usr/bin/gcc-12
-        sudo update-alternatives --set g++ /usr/bin/g++-12
-        sudo update-alternatives --set clang /usr/bin/clang-15
-        sudo update-alternatives --set clang++ /usr/bin/clang++-15
+        sudo apt-get install -y gcc-13 g++-13 clang-15 clang++-15
 
     - name: Verify GCC and Clang versions
       if: runner.os == 'Linux'
       run: |
-        gcc --version
-        g++ --version
-        clang --version
-        clang++ --version
+        gcc-13 --version
+        g++13 --version
+        clang-15 --version
+        clang++15 --version
 
     - name: Install dependencies
       if: runner.os == 'Linux'
