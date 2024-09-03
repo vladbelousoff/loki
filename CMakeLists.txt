@@ -88,7 +88,9 @@ CPMAddPackage(
   NAME spdlog
   GITHUB_REPOSITORY gabime/spdlog
   GIT_TAG v1.14.1
-  OPTIONS "SPDLOG_USE_STD_FORMAT ON"
+  OPTIONS
+    "SPDLOG_USE_STD_FORMAT ON"
+    "SPDLOG_ENABLE_PCH ON"
 )
 
 FetchContent_Declare(
