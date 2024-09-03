@@ -35,7 +35,7 @@ jobs:
             cpp_compiler: g++-12
           - os: ubuntu-latest
             c_compiler: clang-15
-            cpp_compiler: clang++15
+            cpp_compiler: clang++-15
         exclude:
           - os: windows-latest
             c_compiler: gcc-12
@@ -59,7 +59,7 @@ jobs:
         gcc-12 --version
         g++-12 --version
         clang-15 --version
-        clang++15 --version
+        clang++-15 --version
 
     - name: Install dependencies
       if: runner.os == 'Linux'
