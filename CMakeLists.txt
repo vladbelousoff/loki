@@ -16,6 +16,7 @@ FetchContent_Declare(
   libassert
   GIT_REPOSITORY https://github.com/jeremy-rifkin/libassert.git
   GIT_TAG        v2.1.0
+  GIT_SHALLOW    TRUE
 )
 
 FetchContent_MakeAvailable(libassert)
@@ -24,6 +25,7 @@ FetchContent_Declare(
   boost_pfr
   GIT_REPOSITORY https://github.com/boostorg/pfr.git
   GIT_TAG        2.2.0
+  GIT_SHALLOW    TRUE
 )
 
 FetchContent_MakeAvailable(boost_pfr)
@@ -32,13 +34,14 @@ FetchContent_Declare(
   glfw3
   GIT_REPOSITORY https://github.com/glfw/glfw.git
   GIT_TAG        3.4
+  GIT_SHALLOW    TRUE
 )
 
-set(GLFW_BUILD_EXAMPLES OFF)
-set(GLFW_BUILD_TESTS OFF)
-set(GLFW_BUILD_DOCS OFF)
-set(GLFW_INSTALL OFF)
-set(GLFW_BUILD_SHARED_LIBS OFF)
+set(GLFW_BUILD_EXAMPLES 	OFF)
+set(GLFW_BUILD_TESTS 		OFF)
+set(GLFW_BUILD_DOCS 		OFF)
+set(GLFW_INSTALL 			OFF)
+set(GLFW_BUILD_SHARED_LIBS 	OFF)
 
 FetchContent_MakeAvailable(glfw3)
 
@@ -46,6 +49,7 @@ FetchContent_Declare(
   glew
   GIT_REPOSITORY https://github.com/Perlmint/glew-cmake.git
   GIT_TAG        glew-cmake-2.2.0
+  GIT_SHALLOW    TRUE
 )
 
 FetchContent_MakeAvailable(glew)
@@ -64,6 +68,7 @@ add_library(
 	${imgui_external_SOURCE_DIR}/imgui_draw.cpp
 	${imgui_external_SOURCE_DIR}/imgui_tables.cpp
 	${imgui_external_SOURCE_DIR}/imgui_widgets.cpp
+	${imgui_external_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
 	${imgui_external_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
 )
 
@@ -79,9 +84,8 @@ FetchContent_Declare(
   glm
   GIT_REPOSITORY https://github.com/g-truc/glm.git
   GIT_TAG        1.0.1
+  GIT_SHALLOW    TRUE
 )
-
-set(GLM_ENABLE_CXX_20 ON)
 
 FetchContent_MakeAvailable(glm)
 
@@ -89,9 +93,10 @@ FetchContent_Declare(
   spdlog
   GIT_REPOSITORY https://github.com/gabime/spdlog.git
   GIT_TAG        v1.14.1
+  GIT_SHALLOW    TRUE
 )
 
-set(SPD_LOG_USE_STD_FORMAT ON)
+set(SPDLOG_USE_STD_FORMAT ON)
 
 FetchContent_MakeAvailable(spdlog)
 
@@ -99,6 +104,7 @@ FetchContent_Declare(
   cli11
   GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
   GIT_TAG        v2.4.2
+  GIT_SHALLOW    TRUE
 )
 
 FetchContent_MakeAvailable(cli11)
@@ -107,10 +113,11 @@ FetchContent_Declare(
   mimalloc
   GIT_REPOSITORY https://github.com/microsoft/mimalloc.git
   GIT_TAG        v2.1.7
+  GIT_SHALLOW    TRUE
 )
 
 set(MI_BUILD_SHARED OFF)
-set(MI_BUILD_TESTS OFF)
+set(MI_BUILD_TESTS  OFF)
 
 FetchContent_MakeAvailable(mimalloc)
 
@@ -118,6 +125,7 @@ FetchContent_Declare(
   StormLib
   GIT_REPOSITORY https://github.com/ladislav-zezula/StormLib.git
   GIT_TAG        v9.26
+  GIT_SHALLOW    TRUE
 )
 
 FetchContent_MakeAvailable(StormLib)
@@ -130,6 +138,7 @@ FetchContent_Declare(
   sockpp
   GIT_REPOSITORY https://github.com/fpagliughi/sockpp.git
   GIT_TAG        v1.0.0
+  GIT_SHALLOW    TRUE
 )
 
 set(SOCKPP_BUILD_SHARED OFF)
@@ -141,6 +150,7 @@ FetchContent_Declare(
   lib_glob
   GIT_REPOSITORY https://github.com/p-ranav/glob.git
   GIT_TAG        v0.0.1
+  GIT_SHALLOW    TRUE
 )
 
 FetchContent_MakeAvailable(lib_glob)
@@ -149,6 +159,7 @@ FetchContent_Declare(
   BLPConverter
   GIT_REPOSITORY https://github.com/vladbelousoff/BLPConverter.git
   GIT_TAG        master
+  GIT_SHALLOW    TRUE
 )
 
 FetchContent_MakeAvailable(BLPConverter)
@@ -158,8 +169,9 @@ target_include_directories(blp INTERFACE ${blp_SOURCE_DIR})
 
 FetchContent_Declare(
   OpenSSL
-  GIT_REPOSITORY https://github.com/viaduck/openssl-cmake.git
-  GIT_TAG        v3
+  GIT_REPOSITORY https://github.com/janbar/openssl-cmake.git
+  GIT_TAG        1.1.1w-20231130
+  GIT_SHALLOW    TRUE
 )
 
 FetchContent_MakeAvailable(OpenSSL)
@@ -196,6 +208,9 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 if(WIN32)
 	# Add any necessary compile definitions
 	target_compile_definitions(${PROJECT_NAME} PRIVATE -DWIN32_LEAN_AND_MEAN)
+	
+	# Needed for OpenSSL
+	target_link_libraries(${PROJECT_NAME} ws2_32.lib crypt32.lib)
 endif()
 
 # Link dependencies to the executable
