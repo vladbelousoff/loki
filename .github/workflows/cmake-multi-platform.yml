@@ -47,11 +47,33 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install dependencies (Linux only)
+    - name: Install GCC and Clang
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install -y g++-12 clang-15 libgl1-mesa-dev xorg-dev wayland-protocols libwayland-dev libxkbcommon-dev
+        sudo apt-get install -y gcc-12 g++-12 clang-15 clang++-15
+
+    - name: Set default GCC and Clang versions
+      if: runner.os == 'Linux'
+      run: |
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 100
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 100
+        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-15 100
+        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-15 100
+
+    - name: Verify GCC and Clang versions
+      if: runner.os == 'Linux'
+      run: |
+        gcc --version
+        g++ --version
+        clang --version
+        clang++ --version
+
+    - name: Install dependencies
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libgl1-mesa-dev xorg-dev wayland-protocols libwayland-dev libxkbcommon-dev
 
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
