@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
 
-# Set CMP0077 to NEW to ensure option() honors normal variables
-cmake_policy(SET CMP0077 NEW)
-
 # Project definition
 project(Loki LANGUAGES CXX)
 
@@ -14,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(OpenGL REQUIRED)
 
 include(FetchContent)
+include(cmake/CPM.cmake)
 
 FetchContent_Declare(
   libassert
@@ -33,29 +31,23 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(boost_pfr)
 
-FetchContent_Declare(
-  glfw3
-  GIT_REPOSITORY https://github.com/glfw/glfw.git
-  GIT_TAG        3.4
-  GIT_SHALLOW    TRUE
+CPMAddPackage(
+  NAME glfw3
+  GITHUB_REPOSITORY glfw/glfw
+  GIT_TAG 3.4
+  OPTIONS
+	"GLFW_BUILD_EXAMPLES OFF"
+	"GLFW_BUILD_TESTS OFF"
+	"GLFW_BUILD_DOCS OFF"
+	"GLFW_INSTALL OFF"
+	"GLFW_BUILD_SHARED_LIBS OFF"
 )
 
-set(GLFW_BUILD_EXAMPLES 	OFF)
-set(GLFW_BUILD_TESTS 		OFF)
-set(GLFW_BUILD_DOCS 		OFF)
-set(GLFW_INSTALL 			OFF)
-set(GLFW_BUILD_SHARED_LIBS 	OFF)
-
-FetchContent_MakeAvailable(glfw3)
-
-FetchContent_Declare(
-  glew
-  GIT_REPOSITORY https://github.com/Perlmint/glew-cmake.git
-  GIT_TAG        glew-cmake-2.2.0
-  GIT_SHALLOW    TRUE
+CPMAddPackage(
+  NAME glew
+  GITHUB_REPOSITORY Perlmint/glew-cmake
+  GIT_TAG glew-cmake-2.2.0
 )
-
-FetchContent_MakeAvailable(glew)
 
 FetchContent_Declare(
     imgui_external
@@ -92,16 +84,12 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(glm)
 
-FetchContent_Declare(
-  spdlog
-  GIT_REPOSITORY https://github.com/gabime/spdlog.git
-  GIT_TAG        v1.14.1
-  GIT_SHALLOW    TRUE
+CPMAddPackage(
+  NAME spdlog
+  GITHUB_REPOSITORY gabime/spdlog
+  GIT_TAG v1.14.1
+  OPTIONS "SPDLOG_USE_STD_FORMAT ON"
 )
-
-set(SPDLOG_USE_STD_FORMAT ON)
-
-FetchContent_MakeAvailable(spdlog)
 
 FetchContent_Declare(
   cli11
@@ -112,17 +100,14 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(cli11)
 
-FetchContent_Declare(
-  mimalloc
-  GIT_REPOSITORY https://github.com/microsoft/mimalloc.git
-  GIT_TAG        v2.1.7
-  GIT_SHALLOW    TRUE
+CPMAddPackage(
+  NAME mimalloc
+  GITHUB_REPOSITORY microsoft/mimalloc
+  GIT_TAG v2.1.7
+  OPTIONS
+	"MI_BUILD_SHARED OFF"
+	"MI_BUILD_TESTS OFF"
 )
-
-set(MI_BUILD_SHARED OFF)
-set(MI_BUILD_TESTS  OFF)
-
-FetchContent_MakeAvailable(mimalloc)
 
 FetchContent_Declare(
   StormLib
@@ -137,17 +122,14 @@ FetchContent_MakeAvailable(StormLib)
 add_library(StormLib INTERFACE)
 target_include_directories(StormLib INTERFACE ${StormLib_SOURCE_DIR}/src)
 
-FetchContent_Declare(
-  sockpp
-  GIT_REPOSITORY https://github.com/fpagliughi/sockpp.git
-  GIT_TAG        v1.0.0
-  GIT_SHALLOW    TRUE
+CPMAddPackage(
+  NAME sockpp
+  GITHUB_REPOSITORY fpagliughi/sockpp
+  GIT_TAG v1.0.0
+  OPTIONS
+	"SOCKPP_BUILD_SHARED OFF"
+	"SOCKPP_BUILD_STATIC ON"
 )
-
-set(SOCKPP_BUILD_SHARED OFF)
-set(SOCKPP_BUILD_STATIC ON)
-
-FetchContent_MakeAvailable(sockpp)
 
 FetchContent_Declare(
   lib_glob
