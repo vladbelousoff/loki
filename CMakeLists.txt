@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 
+# Set CMP0077 to NEW to ensure option() honors normal variables
+cmake_policy(SET CMP0077 NEW)
+
 # Project definition
 project(Loki LANGUAGES CXX)
 
