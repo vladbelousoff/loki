@@ -17,7 +17,6 @@
 
 #include "game_app.h"
 
-#include "engine/datasource/mpq/mpq_chain.h"
 #include "engine/datasource/mpq/mpq_file_manager.h"
 #include "engine/model/m_2_model.h"
 #include "engine/mt/main_thread_queue.h"
@@ -28,7 +27,7 @@
 #include "imgui.h"
 #include "spdlog/spdlog.h"
 
-#include <format>
+#include <boost/pfr.hpp>
 
 struct
 {
@@ -164,7 +163,7 @@ GameApp::on_gui()
 
     if (auth_session) {
       auto realms = auth_session->get_realms();
-      int num_of_fields = pfr::detail::fields_count<loki::PacketAuthRealm>();
+      int num_of_fields = boost::pfr::detail::fields_count<loki::PacketAuthRealm>();
       if (ImGui::BeginTable("Realms", num_of_fields + 1, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg)) {
         // Table headers
         ImGui::TableSetupColumn("Type");
@@ -181,9 +180,9 @@ GameApp::on_gui()
         for (const auto& realm : realms) {
           ImGui::TableNextRow();
 
-          pfr::for_each_field(realm, [](auto& field, auto field_index) {
+          boost::pfr::for_each_field(realm, [](auto& field, auto field_index) {
             ImGui::TableSetColumnIndex(field_index);
-            std::string string = std::format("{}", field);
+            std::string string = fmt::format("{}", field);
             ImGui::Text("%s", string.c_str());
           });
 

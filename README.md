@@ -18,9 +18,7 @@ for better performance and maintainability.
 ## How to Build
 
 ```bash
-meson setup builddir
-cd builddir
-meson compile
+cmake -B build && cmake --build build --target Loki -j8
 ```
 
 ## Third Party Libraries

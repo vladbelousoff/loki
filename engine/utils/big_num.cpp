@@ -70,7 +70,7 @@ loki::BigNum::set_qword(loki::u64 word)
 }
 
 void
-loki::BigNum::set_binary(const loki::u8* bytes, size_t len)
+loki::BigNum::set_binary(const loki::u8* bytes, std::size_t len)
 {
   BN_lebin2bn(bytes, (int)len, bn);
 }
@@ -121,7 +121,7 @@ loki::BigNum::to_byte_vector() const
 }
 
 void
-loki::BigNum::get_bytes(loki::u8* buf, size_t buf_size) const
+loki::BigNum::get_bytes(loki::u8* buf, std::size_t buf_size) const
 {
   if (!BN_bn2lebinpad(bn, buf, (int)buf_size)) {
     throw std::runtime_error("Failed to convert BIGNUM to binary");

@@ -34,7 +34,7 @@ auto
 loki::MPQFile::read(void* data, unsigned long size) const -> unsigned long
 {
   ASSERT(is_valid());
-  unsigned long bytes_read = 0;
+  DWORD bytes_read = 0;
   SFileReadFile(handle, data, size, &bytes_read, nullptr);
   return bytes_read;
 }

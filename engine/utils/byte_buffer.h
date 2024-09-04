@@ -19,19 +19,18 @@
 
 #include "engine/utils/types.h"
 #include "libassert/assert.hpp"
-#include "pfr.hpp"
 #include "sockpp/tcp_connector.h"
-#include "sockpp/version.h"
 #include "spdlog/spdlog.h"
 
 #include <string>
 #include <vector>
+#include <boost/pfr.hpp>
 
 namespace loki {
 
   class ByteBuffer
   {
-    constexpr static size_t DEFAULT_SIZE = 0x1000;
+    constexpr static std::size_t DEFAULT_SIZE = 0x1000;
 
   public:
     explicit ByteBuffer();
@@ -49,7 +48,7 @@ namespace loki {
     void append(const std::vector<loki::u8>& value);
     void append(std::string_view value);
 
-    template<typename Type, size_t Size>
+    template<typename Type, std::size_t Size>
     void append(const std::array<Type, Size>& value)
     {
       buffer.insert(buffer.end(), value.begin(), value.end());
@@ -63,7 +62,7 @@ namespace loki {
       return value;
     }
 
-    template<typename Type, size_t Size>
+    template<typename Type, std::size_t Size>
     void read(std::array<Type, Size>& arr)
     {
       read(arr.data(), Size * sizeof(Type));
@@ -86,12 +85,12 @@ namespace loki {
       return r_pos != buffer.size();
     }
 
-    size_t get_r_pos() const
+    std::size_t get_r_pos() const
     {
       return r_pos;
     }
 
-    void set_r_pos(size_t pos)
+    void set_r_pos(std::size_t pos)
     {
       r_pos = pos;
     }
@@ -146,7 +145,7 @@ namespace loki {
   {
     static void load(ByteBuffer& buffer, T& value)
     {
-      pfr::for_each_field(value, [&buffer](auto& field) {
+      boost::pfr::for_each_field(value, [&buffer](auto& field) {
         LoadFieldHelper<typename std::remove_cvref<decltype(field)>::type>::load(buffer, field);
       });
     }
@@ -157,7 +156,7 @@ namespace loki {
   {
     static void save(ByteBuffer& buffer, T& value)
     {
-      pfr::for_each_field(value, [&buffer](auto& field) {
+      boost::pfr::for_each_field(value, [&buffer](auto& field) {
         SaveFieldHelper<typename std::remove_cvref<decltype(field)>::type>::save(buffer, field);
       });
     }
@@ -186,7 +185,7 @@ namespace loki {
   {
     static void load(ByteBuffer& buffer, std::vector<u8>& value)
     {
-      size_t size = buffer.read<u8>();
+      std::size_t size = buffer.read<u8>();
       value.resize(size);
       buffer.read(value.data(), value.size());
     }

@@ -21,6 +21,8 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "libassert/assert.hpp"
 
+#include <spdlog/spdlog.h>
+
 void
 loki::M2Model::on_fully_loaded(const std::vector<char>& buffer)
 {
@@ -40,7 +42,7 @@ loki::M2Model::on_fully_loaded(const std::vector<char>& buffer)
   for (u32 i = 0; i < header->number_of_views; ++i) {
     auto path = std::filesystem::path(asset_path.to_string());
     path.replace_extension("");
-    auto model_view_path = std::format("{}{:02}.skin", path.string(), i);
+    auto model_view_path = fmt::format("{}{:02}.skin", path.string(), i);
     auto model_view = M2ModelView::create(model_view_path);
     model_view->request_load_full();
     model_views.push_back(std::move(model_view));

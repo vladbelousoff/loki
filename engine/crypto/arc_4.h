@@ -31,8 +31,8 @@ namespace loki {
     ~ARC4();
 
   public:
-    void init(const u8* seed, size_t len);
-    void update_data(u8* data, size_t len);
+    void init(const u8* seed, std::size_t len);
+    void update_data(u8* data, std::size_t len);
 
     template<typename Container>
     void init(const Container& c)

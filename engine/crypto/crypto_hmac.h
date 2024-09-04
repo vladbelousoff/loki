@@ -21,15 +21,15 @@
 
 namespace loki {
 
-  template<GenericHashImpl::HashCreator HashCreator, size_t DigestLength>
+  template<GenericHashImpl::HashCreator HashCreator, std::size_t DigestLength>
   class GenericHMAC
   {
   public:
-    static constexpr size_t DIGEST_LENGTH = DigestLength;
+    static constexpr std::size_t DIGEST_LENGTH = DigestLength;
     using Digest = std::array<u8, DIGEST_LENGTH>;
 
     template<typename Container>
-    static Digest get_digest_of(const Container& seed, const u8* data, size_t len)
+    static Digest get_digest_of(const Container& seed, const u8* data, std::size_t len)
     {
       GenericHMAC hash(seed);
       hash.update_data(data, len);
@@ -46,7 +46,7 @@ namespace loki {
       return hash.get_digest();
     }
 
-    GenericHMAC(const u8* seed, size_t len)
+    GenericHMAC(const u8* seed, std::size_t len)
       : context(GenericHashImpl::create_context())
       , key(EVP_PKEY_new_mac_key(EVP_PKEY_HMAC, nullptr, seed, (int)len))
     {
@@ -113,7 +113,7 @@ namespace loki {
       return *this;
     }
 
-    void update_data(const u8* data, size_t length)
+    void update_data(const u8* data, std::size_t length)
     {
       i32 result = EVP_DigestSignUpdate(context, data, length);
       DEBUG_ASSERT(result == 1);
@@ -142,7 +142,7 @@ namespace loki {
 
     void finalize()
     {
-      size_t length = DIGEST_LENGTH;
+      std::size_t length = DIGEST_LENGTH;
       i32 result = EVP_DigestSignFinal(context, digest.data(), &length);
       DEBUG_ASSERT(result == 1);
       DEBUG_ASSERT(length == DIGEST_LENGTH);

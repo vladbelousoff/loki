@@ -38,13 +38,13 @@ loki::SRP6::SHA1_interleave(const loki::SRP6::EphemeralKey& S)
 {
   // split S into two buffers
   std::array<u8, EPHEMERAL_KEY_LENGTH / 2> buf0{}, buf1{};
-  for (size_t i = 0; i < EPHEMERAL_KEY_LENGTH / 2; ++i) {
+  for (std::size_t i = 0; i < EPHEMERAL_KEY_LENGTH / 2; ++i) {
     buf0[i] = S[2 * i + 0];
     buf1[i] = S[2 * i + 1];
   }
 
   // find position of first nonzero byte
-  size_t p = 0;
+  std::size_t p = 0;
   while (p < EPHEMERAL_KEY_LENGTH && !S[p]) {
     ++p;
   }
@@ -59,7 +59,7 @@ loki::SRP6::SHA1_interleave(const loki::SRP6::EphemeralKey& S)
 
   // stick the two hashes back together
   SessionKey K;
-  for (size_t i = 0; i < SHA1::DIGEST_LENGTH; ++i) {
+  for (std::size_t i = 0; i < SHA1::DIGEST_LENGTH; ++i) {
     K[2 * i + 0] = hash0[i];
     K[2 * i + 1] = hash1[i];
   }

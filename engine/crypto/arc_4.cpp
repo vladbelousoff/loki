@@ -26,9 +26,9 @@ loki::ARC4::ARC4()
   cipher = EVP_CIPHER_fetch(nullptr, SN_rc4, nullptr);
 #else
   const EVP_CIPHER* cipher = EVP_rc4();
+  EVP_CIPHER_CTX_init(context);
 #endif
 
-  EVP_CIPHER_CTX_init(context);
   i32 result = EVP_EncryptInit_ex(context, cipher, nullptr, nullptr, nullptr);
   ASSERT(result == 1);
 }
@@ -42,7 +42,7 @@ loki::ARC4::~ARC4()
 }
 
 void
-loki::ARC4::init(const loki::u8* seed, size_t len)
+loki::ARC4::init(const loki::u8* seed, std::size_t len)
 {
   i32 result1 = EVP_CIPHER_CTX_set_key_length(context, (int)len);
   ASSERT(result1 == 1);
@@ -51,7 +51,7 @@ loki::ARC4::init(const loki::u8* seed, size_t len)
 }
 
 void
-loki::ARC4::update_data(loki::u8* data, size_t len)
+loki::ARC4::update_data(loki::u8* data, std::size_t len)
 {
   i32 outlen = 0;
   i32 result1 = EVP_EncryptUpdate(context, data, &outlen, data, (int)len);

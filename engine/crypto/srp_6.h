@@ -33,9 +33,9 @@ namespace loki {
   class SRP6
   {
   public:
-    static constexpr size_t SALT_LENGTH = 32;
+    static constexpr std::size_t SALT_LENGTH = 32;
     using Salt = std::array<u8, SALT_LENGTH>;
-    static constexpr size_t EPHEMERAL_KEY_LENGTH = 32;
+    static constexpr std::size_t EPHEMERAL_KEY_LENGTH = 32;
     using EphemeralKey = std::array<u8, EPHEMERAL_KEY_LENGTH>;
 
   public:

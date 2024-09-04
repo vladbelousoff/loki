@@ -19,7 +19,6 @@
 
 #include <spdlog/spdlog.h>
 
-#include <format>
 #include <shared_mutex>
 #include <string>
 #include <thread>
@@ -64,11 +63,9 @@ namespace loki {
 
 } // namespace loki
 
-template<>
-struct std::hash<loki::StringID>
-{
-  std::size_t operator()(const loki::StringID& string) const
-  {
-    return hash<std::size_t>{}(string.id);
-  }
+template <>
+struct std::hash<loki::StringID> {
+    std::size_t operator()(const loki::StringID& string) const {
+        return std::hash<std::size_t>{}(string.id);
+    }
 };

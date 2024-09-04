@@ -26,8 +26,8 @@ namespace loki {
   {
   public:
     void init(const SessionKey& session_key);
-    void decrypt_recv(u8* data, size_t len);
-    void encrypt_send(u8* data, size_t len);
+    void decrypt_recv(u8* data, std::size_t len);
+    void encrypt_send(u8* data, std::size_t len);
 
     bool is_inited() const
     {
