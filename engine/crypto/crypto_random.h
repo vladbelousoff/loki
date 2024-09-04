@@ -31,7 +31,7 @@ namespace loki::crypto {
     get_random_bytes(std::data(c), std::size(c));
   }
 
-  template<size_t S>
+  template<std::size_t S>
   std::array<u8, S> get_random_bytes()
   {
     std::array<u8, S> arr;

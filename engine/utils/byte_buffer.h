@@ -90,7 +90,7 @@ namespace loki {
       return r_pos;
     }
 
-    void set_r_pos(size_t pos)
+    void set_r_pos(std::size_t pos)
     {
       r_pos = pos;
     }
