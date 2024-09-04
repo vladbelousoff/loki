@@ -23,7 +23,7 @@
 
 namespace loki::crypto {
 
-  void get_random_bytes(u8* buf, size_t len);
+  void get_random_bytes(u8* buf, std::size_t len);
 
   template<typename Container>
   void get_random_bytes(Container& c)

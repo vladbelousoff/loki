@@ -44,7 +44,7 @@ loki::SRP6::SHA1_interleave(const loki::SRP6::EphemeralKey& S)
   }
 
   // find position of first nonzero byte
-  size_t p = 0;
+  std::size_t p = 0;
   while (p < EPHEMERAL_KEY_LENGTH && !S[p]) {
     ++p;
   }

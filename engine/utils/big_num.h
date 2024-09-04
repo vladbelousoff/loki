@@ -41,7 +41,7 @@ namespace loki {
     void set_dword(u32 word);
     void set_qword(u64 word);
 
-    void set_binary(const u8* bytes, size_t len);
+    void set_binary(const u8* bytes, std::size_t len);
 
     template<typename Container>
     auto set_binary(const Container& c) -> std::enable_if_t<!std::is_pointer_v<std::decay_t<Container>>>
@@ -49,7 +49,7 @@ namespace loki {
       set_binary(std::data(c), std::size(c));
     }
 
-    static BigNum from_binary(const u8* bytes, size_t len)
+    static BigNum from_binary(const u8* bytes, std::size_t len)
     {
       BigNum ret;
       ret.set_binary(bytes, len);
@@ -107,7 +107,7 @@ namespace loki {
       return BN_num_bytes(bn);
     }
 
-    void get_bytes(u8* buf, size_t buf_size) const;
+    void get_bytes(u8* buf, std::size_t buf_size) const;
 
     std::vector<u8> to_byte_vector() const;
 

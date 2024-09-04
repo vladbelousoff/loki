@@ -41,14 +41,14 @@ namespace loki {
     }
   };
 
-  template<GenericHashImpl::HashCreator HashCreator, size_t DigestLength>
+  template<GenericHashImpl::HashCreator HashCreator, std::size_t DigestLength>
   class GenericHash
   {
   public:
-    static constexpr size_t DIGEST_LENGTH = DigestLength;
+    static constexpr std::size_t DIGEST_LENGTH = DigestLength;
     using Digest = std::array<u8, DIGEST_LENGTH>;
 
-    static auto get_digest_of(const u8* data, size_t len) -> Digest
+    static auto get_digest_of(const u8* data, std::size_t len) -> Digest
     {
       GenericHash hash;
       hash.update_data(data, len);
@@ -116,7 +116,7 @@ namespace loki {
       return *this;
     }
 
-    void update_data(const u8* data, size_t length)
+    void update_data(const u8* data, std::size_t length)
     {
       i32 result = EVP_DigestUpdate(context, data, length);
       DEBUG_ASSERT(result == 1);

@@ -36,14 +36,14 @@ loki::AuthCrypt::init(const loki::SessionKey& session_key)
 }
 
 void
-loki::AuthCrypt::decrypt_recv(loki::u8* data, size_t len)
+loki::AuthCrypt::decrypt_recv(loki::u8* data, std::size_t len)
 {
   ASSERT(initialized);
   decrypt.update_data(data, len);
 }
 
 void
-loki::AuthCrypt::encrypt_send(loki::u8* data, size_t len)
+loki::AuthCrypt::encrypt_send(loki::u8* data, std::size_t len)
 {
   ASSERT(initialized);
   encrypt.update_data(data, len);
