@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <array>
 #include <openssl/bn.h>
 #include <stdexcept>
 #include <vector>
