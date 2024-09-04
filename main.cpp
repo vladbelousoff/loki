@@ -1,5 +1,3 @@
-#include <mimalloc-new-delete.h>
-
 #include "CLI/CLI.hpp"
 #include "game/game_app.h"
 #include "spdlog/spdlog.h"
