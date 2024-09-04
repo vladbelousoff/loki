@@ -17,11 +17,9 @@
 
 #pragma once
 
-#include "glm/fwd.hpp"
-#include "spdlog/spdlog.h"
-
+#include <glm/fwd.hpp>
+#include <spdlog/spdlog.h>
 #include <cstdint>
-#include <format>
 #include <string_view>
 
 namespace loki {
@@ -78,16 +76,14 @@ namespace loki {
 } // namespace loki
 
 template<>
-struct std::formatter<loki::ShaderType> : std::formatter<std::string>
-{
-  static auto format(const loki::ShaderType& type, format_context& ctx) -> decltype(ctx.out())
-  {
+struct fmt::formatter<loki::ShaderType> : fmt::formatter<std::string> {
+  auto format(const loki::ShaderType& type, fmt::format_context& ctx) const -> decltype(ctx.out()) {
     switch (type) {
       case loki::ShaderType::VERT:
-        return format_to(ctx.out(), "loki::ShaderType::VERT");
+        return fmt::format_to(ctx.out(), "loki::ShaderType::VERT");
       case loki::ShaderType::FRAG:
-        return format_to(ctx.out(), "loki::ShaderType::FRAG");
+        return fmt::format_to(ctx.out(), "loki::ShaderType::FRAG");
     }
-    return format_to(ctx.out(), "Unknown");
+    return fmt::format_to(ctx.out(), "Unknown");
   }
 };

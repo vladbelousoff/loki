@@ -27,7 +27,6 @@
 #include "imgui.h"
 #include "spdlog/spdlog.h"
 
-#include <format>
 #include <boost/pfr.hpp>
 
 struct
@@ -183,7 +182,7 @@ GameApp::on_gui()
 
           boost::pfr::for_each_field(realm, [](auto& field, auto field_index) {
             ImGui::TableSetColumnIndex(field_index);
-            std::string string = std::format("{}", field);
+            std::string string = fmt::format("{}", field);
             ImGui::Text("%s", string.c_str());
           });
 
