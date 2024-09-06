@@ -6,7 +6,6 @@ for better performance and maintainability.
 
 ## Requirements
 
-- Only Windows is supported by far, mostly because of StormLib
 - C++ Compiler
     - GCC 12 and later
     - Clang 15 and later
