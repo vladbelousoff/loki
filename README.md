@@ -6,13 +6,11 @@ for better performance and maintainability.
 
 ## Requirements
 
+- CMake
 - C++ Compiler
     - GCC 12 and later
     - Clang 15 and later
     - Visual Studio 2019 version 16.8 and later
-- Meson
-- CMake
-- Ninja
 
 ## How to Build
 
