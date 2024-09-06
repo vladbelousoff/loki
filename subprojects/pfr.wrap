@@ -1,8 +1,0 @@
-[wrap-git]
-url = https://github.com/apolukhin/pfr_non_boost.git
-revision = 2.2.0
-depth = 1
-method = cmake
-
-[provide]
-pfr = boost_pfr_dep

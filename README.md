@@ -8,8 +8,8 @@ for better performance and maintainability.
 
 - Only Windows is supported by far, mostly because of StormLib
 - C++ Compiler
-    - ~~GCC 10.1 and later~~
-    - ~~Clang 10 and later~~
+    - GCC 12 and later
+    - Clang 15 and later
     - Visual Studio 2019 version 16.8 and later
 - Meson
 - CMake
