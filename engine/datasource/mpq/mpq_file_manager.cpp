@@ -40,7 +40,10 @@ loki::MPQFileManager::request_file(const std::filesystem::path& path, const File
     HANDLE handle{};
 
     auto archive_handle = chain.get_archive().get_handle();
-    ASSERT(archive_handle, "Handle is invalid");
+    if (!archive_handle) {
+      spdlog::error("Cannot open file: {}, skipping...", path.string());
+      return;
+    }
 
     if (SFileOpenFileEx(archive_handle, path.string().c_str(), SFILE_OPEN_FROM_MPQ, &handle)) {
       char filename[MAX_PATH];
