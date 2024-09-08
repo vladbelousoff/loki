@@ -22,9 +22,9 @@
 #include "sockpp/tcp_connector.h"
 #include "spdlog/spdlog.h"
 
+#include <boost/pfr.hpp>
 #include <string>
 #include <vector>
-#include <boost/pfr.hpp>
 
 namespace loki {
 

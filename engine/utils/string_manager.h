@@ -63,9 +63,11 @@ namespace loki {
 
 } // namespace loki
 
-template <>
-struct std::hash<loki::StringID> {
-    std::size_t operator()(const loki::StringID& string) const {
-        return std::hash<std::size_t>{}(string.id);
-    }
+template<>
+struct std::hash<loki::StringID>
+{
+  std::size_t operator()(const loki::StringID& string) const
+  {
+    return std::hash<std::size_t>{}(string.id);
+  }
 };
