@@ -17,9 +17,9 @@
 
 #pragma once
 
+#include <cstdint>
 #include <glm/fwd.hpp>
 #include <spdlog/spdlog.h>
-#include <cstdint>
 #include <string_view>
 
 namespace loki {
@@ -76,8 +76,10 @@ namespace loki {
 } // namespace loki
 
 template<>
-struct fmt::formatter<loki::ShaderType> : fmt::formatter<std::string> {
-  auto format(const loki::ShaderType& type, fmt::format_context& ctx) const -> decltype(ctx.out()) {
+struct fmt::formatter<loki::ShaderType> : fmt::formatter<std::string>
+{
+  auto format(const loki::ShaderType& type, fmt::format_context& ctx) const -> decltype(ctx.out())
+  {
     switch (type) {
       case loki::ShaderType::VERT:
         return fmt::format_to(ctx.out(), "loki::ShaderType::VERT");
