@@ -70,7 +70,7 @@ namespace loki {
     void wait_load_full(const MPQFile& file);
 
   private:
-    std::atomic<AssetLoadingState> loading_state;
+    AssetLoadingState loading_state;
   };
 
   template<typename AssetType>
