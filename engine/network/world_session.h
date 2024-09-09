@@ -20,7 +20,6 @@
 #include "auth_crypt.h"
 #include "auth_session.h"
 #include "engine/utils/byte_buffer.h"
-#include "engine/utils/types.h"
 #include "opcodes.h"
 #include "sockpp/tcp_connector.h"
 
@@ -35,22 +34,22 @@ namespace loki {
   public:
     struct ServerPacketHeader
     {
-      u32 size{};
-      std::array<u8, 5> header{};
+      std::uint32_t size{};
+      std::array<std::uint8_t, 5> header{};
     };
 
 #pragma pack(push, 1)
 
     struct ClientPacketHeader
     {
-      u16 size{};
-      u32 command{};
+      std::uint16_t size{};
+      std::uint32_t command{};
     };
 
 #pragma pack(pop)
 
   public:
-    explicit WorldSession(const std::weak_ptr<AuthSession>& auth_session, u8 realm_id, std::string_view host, u16 port);
+    explicit WorldSession(const std::weak_ptr<AuthSession>& auth_session, std::uint8_t realm_id, std::string_view host, std::uint16_t port);
     ~WorldSession();
 
     void stop();
@@ -59,12 +58,12 @@ namespace loki {
     void handle_connection();
     void read_incoming_packets();
     void read_next_packet();
-    void process_command(u16 command);
+    void process_command(std::uint16_t command);
     void handle_auth_challenge();
     void handle_auth_response();
 
   private:
-    u8 realm_id;
+    std::uint8_t realm_id;
     std::weak_ptr<AuthSession> auth_session;
     sockpp::tcp_connector connector;
     sockpp::tcp_socket socket;

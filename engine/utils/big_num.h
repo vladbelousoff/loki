@@ -22,8 +22,6 @@
 #include <stdexcept>
 #include <vector>
 
-#include "types.h"
-
 namespace loki {
 
   class BigNum
@@ -37,11 +35,11 @@ namespace loki {
     ~BigNum();
 
   public:
-    void set_dword(i32 word);
-    void set_dword(u32 word);
-    void set_qword(u64 word);
+    void set_dword(std::int32_t word);
+    void set_dword(std::uint32_t word);
+    void set_qword(std::uint64_t word);
 
-    void set_binary(const u8* bytes, std::size_t len);
+    void set_binary(const std::uint8_t* bytes, std::size_t len);
 
     template<typename Container>
     auto set_binary(const Container& c) -> std::enable_if_t<!std::is_pointer_v<std::decay_t<Container>>>
@@ -49,7 +47,7 @@ namespace loki {
       set_binary(std::data(c), std::size(c));
     }
 
-    static BigNum from_binary(const u8* bytes, std::size_t len)
+    static BigNum from_binary(const std::uint8_t* bytes, std::size_t len)
     {
       BigNum ret;
       ret.set_binary(bytes, len);
@@ -64,7 +62,7 @@ namespace loki {
       return ret;
     }
 
-    static BigNum from_random(i32 num_bits)
+    static BigNum from_random(std::int32_t num_bits)
     {
       BigNum ret;
       ret.set_rand(num_bits);
@@ -72,7 +70,7 @@ namespace loki {
     }
 
     bool set_hex_str(const char* str);
-    void set_rand(i32 num_bits);
+    void set_rand(std::int32_t num_bits);
 
     BigNum exp(const BigNum& bn1) const;
     BigNum mod_exp(const BigNum& bn1, const BigNum& bn2) const;
@@ -107,14 +105,14 @@ namespace loki {
       return BN_num_bytes(bn);
     }
 
-    void get_bytes(u8* buf, std::size_t buf_size) const;
+    void get_bytes(std::uint8_t* buf, std::size_t buf_size) const;
 
-    std::vector<u8> to_byte_vector() const;
+    std::vector<std::uint8_t> to_byte_vector() const;
 
     template<std::size_t Size>
-    std::array<u8, Size> to_byte_array() const
+    std::array<std::uint8_t, Size> to_byte_array() const
     {
-      std::array<u8, Size> buf;
+      std::array<std::uint8_t, Size> buf;
       get_bytes(buf.data(), Size);
       return buf;
     }

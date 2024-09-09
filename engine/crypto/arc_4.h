@@ -18,9 +18,7 @@
 #pragma once
 
 #include <array>
-
-#include "engine/utils/types.h"
-#include "openssl/evp.h"
+#include <openssl/evp.h>
 
 namespace loki {
 
@@ -31,8 +29,8 @@ namespace loki {
     ~ARC4();
 
   public:
-    void init(const u8* seed, std::size_t len);
-    void update_data(u8* data, std::size_t len);
+    void init(const std::uint8_t* seed, std::size_t len);
+    void update_data(std::uint8_t* data, std::size_t len);
 
     template<typename Container>
     void init(const Container& c)

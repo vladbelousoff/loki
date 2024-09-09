@@ -26,10 +26,10 @@ namespace loki {
   {
   public:
     static constexpr std::size_t DIGEST_LENGTH = DigestLength;
-    using Digest = std::array<u8, DIGEST_LENGTH>;
+    using Digest = std::array<std::uint8_t, DIGEST_LENGTH>;
 
     template<typename Container>
-    static Digest get_digest_of(const Container& seed, const u8* data, std::size_t len)
+    static Digest get_digest_of(const Container& seed, const std::uint8_t* data, std::size_t len)
     {
       GenericHMAC hash(seed);
       hash.update_data(data, len);
@@ -46,11 +46,11 @@ namespace loki {
       return hash.get_digest();
     }
 
-    GenericHMAC(const u8* seed, std::size_t len)
+    GenericHMAC(const std::uint8_t* seed, std::size_t len)
       : context(GenericHashImpl::create_context())
       , key(EVP_PKEY_new_mac_key(EVP_PKEY_HMAC, nullptr, seed, (int)len))
     {
-      i32 result = EVP_DigestSignInit(context, nullptr, HashCreator(), nullptr, key);
+      int result = EVP_DigestSignInit(context, nullptr, HashCreator(), nullptr, key);
       ASSERT(result == 1);
     }
 
@@ -90,7 +90,7 @@ namespace loki {
         return *this;
       }
 
-      i32 result = EVP_MD_CTX_copy_ex(context, other.context);
+      int result = EVP_MD_CTX_copy_ex(context, other.context);
       ASSERT(result == 1);
       key = other.key;      // EVP_PKEY uses reference counting internally, just copy the pointer
       EVP_PKEY_up_ref(key); // Bump reference count for PKEY, as every instance of this class holds two references to
@@ -113,15 +113,15 @@ namespace loki {
       return *this;
     }
 
-    void update_data(const u8* data, std::size_t length)
+    void update_data(const std::uint8_t* data, std::size_t length)
     {
-      i32 result = EVP_DigestSignUpdate(context, data, length);
+      int result = EVP_DigestSignUpdate(context, data, length);
       DEBUG_ASSERT(result == 1);
     }
 
     void update_data(std::string_view str)
     {
-      update_data(reinterpret_cast<const u8*>(str.data()), str.size());
+      update_data(reinterpret_cast<const std::uint8_t*>(str.data()), str.size());
     }
 
     void update_data(const std::string& str)
@@ -143,7 +143,7 @@ namespace loki {
     void finalize()
     {
       std::size_t length = DIGEST_LENGTH;
-      i32 result = EVP_DigestSignFinal(context, digest.data(), &length);
+      int result = EVP_DigestSignFinal(context, digest.data(), &length);
       DEBUG_ASSERT(result == 1);
       DEBUG_ASSERT(length == DIGEST_LENGTH);
     }

@@ -39,7 +39,7 @@ loki::M2Model::on_fully_loaded(const std::vector<char>& buffer)
   spdlog::info("Loaded vertices: {}", header->vertices.number);
   spdlog::info("Number of views: {}", header->number_of_views);
 
-  for (u32 i = 0; i < header->number_of_views; ++i) {
+  for (std::uint32_t i = 0; i < header->number_of_views; ++i) {
     auto path = std::filesystem::path(asset_path.to_string());
     path.replace_extension("");
     auto model_view_path = fmt::format("{}{:02}.skin", path.string(), i);
@@ -53,7 +53,7 @@ loki::M2Model::on_fully_loaded(const std::vector<char>& buffer)
   auto* texture_def = reinterpret_cast<const M2ModelTextureDef*>(&buffer[header->textures.offset]);
   textures.resize(header->textures.number);
 
-  for (u32 i = 0; i < header->textures.number; ++i) {
+  for (std::uint32_t i = 0; i < header->textures.number; ++i) {
     if (texture_def[i].type == TextureType::FILENAME) {
       std::string texture_name = &buffer[texture_def[i].name.offset];
       spdlog::info("Texture index: {}, name: {}", i, texture_name);
@@ -62,9 +62,9 @@ loki::M2Model::on_fully_loaded(const std::vector<char>& buffer)
     }
   }
 
-  auto* tex_lookup = reinterpret_cast<const u16*>(&buffer[header->tex_lookup.offset]);
+  auto* tex_lookup = reinterpret_cast<const std::uint16_t*>(&buffer[header->tex_lookup.offset]);
   raw_tex_lookup.resize(header->tex_lookup.number);
-  memcpy(raw_tex_lookup.data(), tex_lookup, header->tex_lookup.number * sizeof(u16));
+  memcpy(raw_tex_lookup.data(), tex_lookup, header->tex_lookup.number * sizeof(std::uint16_t));
 
   // Probably we can get rid of it, but for now let's live with these guys
   std::vector<glm::vec3> vertices;
@@ -132,7 +132,7 @@ loki::M2Model::draw() const
   // TODO: Create this array on every draw is not a good idea
   std::vector<M2ModelRenderPass> render_passes;
 
-  for (u32 i = 0; i < model_view->header.tex.number; ++i) {
+  for (std::uint32_t i = 0; i < model_view->header.tex.number; ++i) {
     M2ModelRenderPass pass{};
 
     ASSERT(i < model_view->raw_tex_units.size());

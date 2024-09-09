@@ -19,7 +19,6 @@
 
 #include "engine/crypto/srp_6.h"
 #include "engine/utils/byte_buffer.h"
-#include "engine/utils/types.h"
 #include "sockpp/tcp_connector.h"
 
 #include <memory>
@@ -33,18 +32,18 @@ namespace loki {
 
   struct PacketAuthRealm
   {
-    loki::u8 type{};
-    loki::u8 locked{};
-    loki::u8 flags{};
+    std::uint8_t type{};
+    std::uint8_t locked{};
+    std::uint8_t flags{};
     std::string name;
     std::string server_socket;
-    loki::u32 population_level{};
-    loki::u8 number_of_characters{};
-    loki::u8 category{};
-    loki::u8 realm_id{};
+    std::uint32_t population_level{};
+    std::uint8_t number_of_characters{};
+    std::uint8_t category{};
+    std::uint8_t realm_id{};
   };
 
-  enum class AuthSessionState : i8
+  enum class AuthSessionState : std::int8_t
   {
     INVALID = -1,
     CHALLENGE = 0,
@@ -55,7 +54,7 @@ namespace loki {
   class AuthSession : public std::enable_shared_from_this<AuthSession>
   {
   public:
-    explicit AuthSession(std::string_view host, u16 port);
+    explicit AuthSession(std::string_view host, std::uint16_t port);
     ~AuthSession();
 
     AuthSession(const AuthSession&) = delete;
@@ -63,7 +62,7 @@ namespace loki {
 
   public:
     void login(std::string_view username, std::string_view password);
-    auto connect_to_realm(u8 realm_id) -> std::shared_ptr<WorldSession>;
+    auto connect_to_realm(std::uint8_t realm_id) -> std::shared_ptr<WorldSession>;
     void stop();
     void shutdown();
     auto get_realms() const -> std::vector<PacketAuthRealm>;

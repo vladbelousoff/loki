@@ -47,30 +47,30 @@ loki::BigNum::~BigNum()
 }
 
 void
-loki::BigNum::set_dword(loki::i32 word)
+loki::BigNum::set_dword(std::int32_t word)
 {
-  set_dword(static_cast<u32>(abs(word)));
+  set_dword(static_cast<std::uint32_t>(abs(word)));
   if (word < 0) {
     BN_set_negative(bn, 1);
   }
 }
 
 void
-loki::BigNum::set_dword(loki::u32 word)
+loki::BigNum::set_dword(std::uint32_t word)
 {
   BN_set_word(bn, word);
 }
 
 void
-loki::BigNum::set_qword(loki::u64 word)
+loki::BigNum::set_qword(std::uint64_t word)
 {
-  BN_set_word(bn, (u32)(word >> 32));
+  BN_set_word(bn, (std::uint32_t)(word >> 32));
   BN_lshift(bn, bn, 32);
-  BN_add_word(bn, (u32)(word & 0xFFFFFFFF));
+  BN_add_word(bn, (std::uint32_t)(word & 0xFFFFFFFF));
 }
 
 void
-loki::BigNum::set_binary(const loki::u8* bytes, std::size_t len)
+loki::BigNum::set_binary(const std::uint8_t* bytes, std::size_t len)
 {
   BN_lebin2bn(bytes, (int)len, bn);
 }
@@ -112,16 +112,16 @@ loki::BigNum::mod_exp(const loki::BigNum& bn1, const loki::BigNum& bn2) const
   return ret;
 }
 
-std::vector<loki::u8>
+std::vector<std::uint8_t>
 loki::BigNum::to_byte_vector() const
 {
-  std::vector<loki::u8> buf(BN_num_bytes(bn));
+  std::vector<std::uint8_t> buf(BN_num_bytes(bn));
   get_bytes(buf.data(), buf.size());
   return buf;
 }
 
 void
-loki::BigNum::get_bytes(loki::u8* buf, std::size_t buf_size) const
+loki::BigNum::get_bytes(std::uint8_t* buf, std::size_t buf_size) const
 {
   if (!BN_bn2lebinpad(bn, buf, (int)buf_size)) {
     throw std::runtime_error("Failed to convert BIGNUM to binary");
@@ -129,7 +129,7 @@ loki::BigNum::get_bytes(loki::u8* buf, std::size_t buf_size) const
 }
 
 void
-loki::BigNum::set_rand(loki::i32 num_bits)
+loki::BigNum::set_rand(std::int32_t num_bits)
 {
   BN_rand(bn, num_bits, 0, 1);
 }

@@ -22,7 +22,7 @@
 #include "engine/crypto/crypto_random.h"
 #include "opcodes.h"
 
-loki::WorldSession::WorldSession(const std::weak_ptr<AuthSession>& auth_session, u8 realm_id, std::string_view host, loki::u16 port)
+loki::WorldSession::WorldSession(const std::weak_ptr<AuthSession>& auth_session, std::uint8_t realm_id, std::string_view host, std::uint16_t port)
   : auth_session(auth_session)
   , realm_id(realm_id)
   , connector({ std::string(host), port })
@@ -90,7 +90,7 @@ loki::WorldSession::read_incoming_packets()
       client_header.size = htons(4);
       client_header.command = CMSG_CHAR_ENUM;
 
-      auth_crypt.encrypt_send((u8*)&client_header, sizeof(client_header));
+      auth_crypt.encrypt_send((std::uint8_t*)&client_header, sizeof(client_header));
 
       buffer.reset();
       buffer.save_buffer(client_header);
@@ -99,8 +99,8 @@ loki::WorldSession::read_incoming_packets()
       chars = true;
     }
   } else {
-    buffer.read<u16>(); // header, unused data (probably size?)
-    u16 command = buffer.read<u16>();
+    buffer.read<std::uint16_t>(); // header, unused data (probably size?)
+    auto command = buffer.read<std::uint16_t>();
     process_command(command);
   }
 }
@@ -109,13 +109,13 @@ void
 loki::WorldSession::read_next_packet()
 {
   auto cur_pos = buffer.get_r_pos();
-  std::array<u8, 4> header{};
+  std::array<std::uint8_t, 4> header{};
 
   buffer.load_buffer(header);
   auth_crypt.decrypt_recv(header.data(), 4 /* small size packet, there's also 5-size packets, but it's not our case so far */);
 
-  auto size = htons(*reinterpret_cast<u16*>(&header[0]));
-  u16 command = *reinterpret_cast<u16*>(&header[2]);
+  auto size = htons(*reinterpret_cast<std::uint16_t*>(&header[0]));
+  std::uint16_t command = *reinterpret_cast<std::uint16_t*>(&header[2]);
   spdlog::info("Packet size: {}", size);
 
   process_command(command);
@@ -123,7 +123,7 @@ loki::WorldSession::read_next_packet()
 }
 
 void
-loki::WorldSession::process_command(loki::u16 command)
+loki::WorldSession::process_command(std::uint16_t command)
 {
   switch (command) {
     case SMSG_AUTH_CHALLENGE:
@@ -143,13 +143,13 @@ loki::WorldSession::handle_auth_challenge()
 {
   spdlog::info("Receiving SMSG_AUTH_CHALLENGE");
 
-  auto one = buffer.read<u32>();
+  auto one = buffer.read<std::uint32_t>();
   DEBUG_ASSERT(one == 0x1);
 
-  std::array<loki::u8, 4> auth_seed{};
+  std::array<std::uint8_t, 4> auth_seed{};
   buffer.read(auth_seed);
 
-  std::array<loki::u8, 4> t{};
+  std::array<std::uint8_t, 4> t{};
 
   auto local_challenge = crypto::get_random_bytes<4>();
   auto session_key = auth_session.lock()->get_session_key();
@@ -157,17 +157,17 @@ loki::WorldSession::handle_auth_challenge()
 
   struct
   {
-    u32 build = config::build;
-    u32 login_server_id = 0;
+    std::uint32_t build = config::build;
+    std::uint32_t login_server_id = 0;
     std::string account{};
-    u32 local_server_type = 0;
-    std::array<u8, 4> local_challenge{};
-    u32 region_id = 0;
-    u32 battle_group_id = 0;
-    u32 realm_id = 0;
-    u64 dos_response = 0;
+    std::uint32_t local_server_type = 0;
+    std::array<std::uint8_t, 4> local_challenge{};
+    std::uint32_t region_id = 0;
+    std::uint32_t battle_group_id = 0;
+    std::uint32_t realm_id = 0;
+    std::uint64_t dos_response = 0;
     SHA1::Digest digest{};
-    std::vector<u8> addon_info{};
+    std::vector<std::uint8_t> addon_info{};
   } auth_info;
 
   auth_info.realm_id = realm_id;
@@ -194,6 +194,6 @@ loki::WorldSession::handle_auth_response()
 {
   spdlog::info("Receiving SMSG_AUTH_RESPONSE");
 
-  u8 status = buffer.read<u8>();
+  auto status = buffer.read<std::uint8_t>();
   ASSERT(status == 12, "You're not the first in the queue"); // AUTH_OK code
 }

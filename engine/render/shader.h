@@ -78,7 +78,7 @@ namespace loki {
 template<>
 struct fmt::formatter<loki::ShaderType> : fmt::formatter<std::string>
 {
-  auto format(const loki::ShaderType& type, fmt::format_context& ctx) const -> decltype(ctx.out())
+  static auto format(const loki::ShaderType& type, fmt::format_context& ctx) -> decltype(ctx.out())
   {
     switch (type) {
       case loki::ShaderType::VERT:

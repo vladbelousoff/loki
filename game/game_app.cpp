@@ -21,7 +21,6 @@
 #include "engine/model/m_2_model.h"
 #include "engine/mt/main_thread_queue.h"
 #include "engine/network/auth_session.h"
-#include "engine/utils/types.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "imgui.h"
@@ -157,7 +156,7 @@ GameApp::on_gui()
     if (ImGui::Button("Connect")) {
       spdlog::info("Connecting to auth-server @{}:{}...", host, port);
 
-      auth_session = std::make_shared<loki::AuthSession>(host, (loki::u16)port);
+      auth_session = std::make_shared<loki::AuthSession>(host, (std::uint16_t)port);
       auth_session->login(username, password);
     }
 

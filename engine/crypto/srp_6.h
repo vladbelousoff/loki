@@ -20,7 +20,6 @@
 #include "engine/crypto/crypto_hash.h"
 #include "engine/network/auth_defines.h"
 #include "engine/utils/big_num.h"
-#include "engine/utils/types.h"
 
 #include <array>
 #include <string_view>
@@ -34,9 +33,9 @@ namespace loki {
   {
   public:
     static constexpr std::size_t SALT_LENGTH = 32;
-    using Salt = std::array<u8, SALT_LENGTH>;
+    using Salt = std::array<std::uint8_t, SALT_LENGTH>;
     static constexpr std::size_t EPHEMERAL_KEY_LENGTH = 32;
-    using EphemeralKey = std::array<u8, EPHEMERAL_KEY_LENGTH>;
+    using EphemeralKey = std::array<std::uint8_t, EPHEMERAL_KEY_LENGTH>;
 
   public:
     explicit SRP6(const BigNum& N, const BigNum& g);

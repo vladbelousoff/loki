@@ -37,7 +37,7 @@ loki::SessionKey
 loki::SRP6::SHA1_interleave(const loki::SRP6::EphemeralKey& S)
 {
   // split S into two buffers
-  std::array<u8, EPHEMERAL_KEY_LENGTH / 2> buf0{}, buf1{};
+  std::array<std::uint8_t, EPHEMERAL_KEY_LENGTH / 2> buf0{}, buf1{};
   for (std::size_t i = 0; i < EPHEMERAL_KEY_LENGTH / 2; ++i) {
     buf0[i] = S[2 * i + 0];
     buf1[i] = S[2 * i + 1];

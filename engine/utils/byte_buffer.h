@@ -17,7 +17,6 @@
 
 #pragma once
 
-#include "engine/utils/types.h"
 #include "libassert/assert.hpp"
 #include "sockpp/tcp_connector.h"
 #include "spdlog/spdlog.h"
@@ -45,7 +44,7 @@ namespace loki {
       buffer.insert(buffer.end(), bytes, bytes + sizeof(T));
     }
 
-    void append(const std::vector<loki::u8>& value);
+    void append(const std::vector<std::uint8_t>& value);
     void append(std::string_view value);
 
     template<typename Type, std::size_t Size>
@@ -105,7 +104,7 @@ namespace loki {
     void load_buffer(T& value);
 
   protected:
-    std::vector<loki::u8> buffer;
+    std::vector<std::uint8_t> buffer;
     std::size_t r_pos = 0;
   };
 
@@ -181,20 +180,20 @@ namespace loki {
   };
 
   template<>
-  struct LoadFieldHelper<std::vector<u8>>
+  struct LoadFieldHelper<std::vector<std::uint8_t>>
   {
-    static void load(ByteBuffer& buffer, std::vector<u8>& value)
+    static void load(ByteBuffer& buffer, std::vector<std::uint8_t>& value)
     {
-      std::size_t size = buffer.read<u8>();
+      std::size_t size = buffer.read<std::uint8_t>();
       value.resize(size);
       buffer.read(value.data(), value.size());
     }
   };
 
   template<>
-  struct SaveFieldHelper<std::vector<u8>>
+  struct SaveFieldHelper<std::vector<std::uint8_t>>
   {
-    static void save(ByteBuffer& buffer, std::vector<u8>& value)
+    static void save(ByteBuffer& buffer, std::vector<std::uint8_t>& value)
     {
       buffer.append(value);
     }
@@ -226,18 +225,18 @@ namespace loki {
   };
 
   template<std::size_t N>
-  struct LoadFieldHelper<std::array<u8, N>>
+  struct LoadFieldHelper<std::array<std::uint8_t, N>>
   {
-    static void load(ByteBuffer& buffer, std::array<u8, N>& value)
+    static void load(ByteBuffer& buffer, std::array<std::uint8_t, N>& value)
     {
       buffer.read(value);
     }
   };
 
   template<std::size_t N>
-  struct SaveFieldHelper<std::array<u8, N>>
+  struct SaveFieldHelper<std::array<std::uint8_t, N>>
   {
-    static void save(ByteBuffer& buffer, std::array<u8, N>& value)
+    static void save(ByteBuffer& buffer, std::array<std::uint8_t, N>& value)
     {
       buffer.append(value);
     }

@@ -23,70 +23,70 @@
 
 struct PaketAuthChallengeRequest
 {
-  loki::u8 command{};
-  loki::u8 protocol_version{};
-  loki::u16 packet_size{};
-  std::array<loki::u8, 4> game_name{};
-  loki::u8 major_version{};
-  loki::u8 minor_version{};
-  loki::u8 patch_version{};
-  loki::u16 build{};
-  std::array<loki::u8, 4> platform{};
-  std::array<loki::u8, 4> os{};
-  std::array<loki::u8, 4> country{};
-  loki::u32 timezone{};
-  loki::u32 ip_address{};
-  std::vector<loki::u8> login{};
+  std::uint8_t command{};
+  std::uint8_t protocol_version{};
+  std::uint16_t packet_size{};
+  std::array<std::uint8_t, 4> game_name{};
+  std::uint8_t major_version{};
+  std::uint8_t minor_version{};
+  std::uint8_t patch_version{};
+  std::uint16_t build{};
+  std::array<std::uint8_t, 4> platform{};
+  std::array<std::uint8_t, 4> os{};
+  std::array<std::uint8_t, 4> country{};
+  std::uint32_t timezone{};
+  std::uint32_t ip_address{};
+  std::vector<std::uint8_t> login{};
 };
 
 struct PaketAuthChallengeResponse
 {
-  loki::u8 command{};
-  loki::u8 protocol_version{};
-  loki::u8 status{};
+  std::uint8_t command{};
+  std::uint8_t protocol_version{};
+  std::uint8_t status{};
   loki::SRP6::EphemeralKey B{};
-  std::vector<loki::u8> g{};
-  std::vector<loki::u8> N{};
+  std::vector<std::uint8_t> g{};
+  std::vector<std::uint8_t> N{};
   loki::SRP6::EphemeralKey s{};
-  std::array<loki::u8, 16> crc_salt{};
-  loki::u8 two_factor_enabled{};
+  std::array<std::uint8_t, 16> crc_salt{};
+  std::uint8_t two_factor_enabled{};
 };
 
 struct PaketAuthLogonProofRequest
 {
-  loki::u8 command{};
+  std::uint8_t command{};
   loki::SRP6::EphemeralKey A{};
   loki::SHA1::Digest client_M{};
   loki::SHA1::Digest crc_hash{};
-  loki::u8 number_of_keys{};
-  loki::u8 two_factor_enabled{};
+  std::uint8_t number_of_keys{};
+  std::uint8_t two_factor_enabled{};
 };
 
 struct PaketAuthLogonProofResponse
 {
-  loki::u8 command{};
-  loki::u8 status{};
+  std::uint8_t command{};
+  std::uint8_t status{};
   loki::SHA1::Digest server_M{};
-  loki::u32 account_flags{};
-  loki::u32 hardware_survey_id{};
-  loki::u16 unknown_flags{};
+  std::uint32_t account_flags{};
+  std::uint32_t hardware_survey_id{};
+  std::uint16_t unknown_flags{};
 };
 
 struct PacketAuthRealmListRequest
 {
-  loki::u8 command{};
-  loki::u32 unknown{};
+  std::uint8_t command{};
+  std::uint32_t unknown{};
 };
 
 struct PacketAuthRealmListHead
 {
-  loki::u8 command{};
-  loki::u16 packet_size{};
-  loki::u32 unknown{};
-  loki::u16 number_of_realms{};
+  std::uint8_t command{};
+  std::uint16_t packet_size{};
+  std::uint32_t unknown{};
+  std::uint16_t number_of_realms{};
 };
 
-loki::AuthSession::AuthSession(std::string_view host, loki::u16 port)
+loki::AuthSession::AuthSession(std::string_view host, std::uint16_t port)
   : connector({ std::string(host), port })
   , thread()
   , running(true)
@@ -160,7 +160,7 @@ loki::AuthSession::login(std::string_view username, std::string_view password)
 void
 loki::AuthSession::handle_challenge()
 {
-  auto set_string = []<std::size_t N>(std::array<loki::u8, N>& data, const std::string& string) {
+  auto set_string = []<std::size_t N>(std::array<std::uint8_t, N>& data, const std::string& string) {
     DEBUG_ASSERT(string.size() <= N);
     std::reverse_copy(string.begin(), string.end(), data.begin());
   };
@@ -284,7 +284,7 @@ loki::AuthSession::get_session_key() const -> std::optional<SessionKey>
 }
 
 auto
-loki::AuthSession::connect_to_realm(loki::u8 realm_id) -> std::shared_ptr<WorldSession>
+loki::AuthSession::connect_to_realm(std::uint8_t realm_id) -> std::shared_ptr<WorldSession>
 {
   stop();
 
@@ -294,7 +294,7 @@ loki::AuthSession::connect_to_realm(loki::u8 realm_id) -> std::shared_ptr<WorldS
       auto world_host = realm.server_socket.substr(0, colon_pos);
       auto world_port = std::stoul(realm.server_socket.substr(colon_pos + 1));
 
-      return std::make_shared<WorldSession>(weak_from_this(), realm_id, world_host, static_cast<u16>(world_port));
+      return std::make_shared<WorldSession>(weak_from_this(), realm_id, world_host, static_cast<std::uint16_t>(world_port));
     }
   }
 

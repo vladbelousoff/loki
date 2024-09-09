@@ -17,11 +17,9 @@
 
 #pragma once
 
-#include "engine/utils/types.h"
-
 namespace loki {
 
-  enum Opcodes : u16
+  enum Opcodes : std::uint16_t
   {
     CMSG_BOOTME = 0x001,
     CMSG_DBLOOKUP = 0x002,

@@ -24,11 +24,11 @@ loki::M2ModelView::on_fully_loaded(const std::vector<char>& buffer)
   memcpy(&header, buffer.data(), sizeof(header));
   ASSERT(header.id[0] == 'S' && header.id[1] == 'K' && header.id[2] == 'I' && header.id[3] == 'N');
 
-  const u16* index_lookup = reinterpret_cast<const u16*>(&buffer[header.index.offset]);
-  const u16* triangles = reinterpret_cast<const u16*>(&buffer[header.tris.offset]);
+  const auto* index_lookup = reinterpret_cast<const std::uint16_t*>(&buffer[header.index.offset]);
+  const auto* triangles = reinterpret_cast<const std::uint16_t*>(&buffer[header.tris.offset]);
 
   raw_indices.resize(header.tris.number);
-  for (u32 i = 0; i < header.tris.number; ++i) {
+  for (std::uint32_t i = 0; i < header.tris.number; ++i) {
     raw_indices[i] = index_lookup[triangles[i]];
   }
 
@@ -37,8 +37,8 @@ loki::M2ModelView::on_fully_loaded(const std::vector<char>& buffer)
   // Render ops
   auto* ops = reinterpret_cast<const M2ModelGeoset*>(&buffer[header.sub.offset]);
 
-  u32 istart = 0;
-  for (u32 i = 0; i < header.sub.number; ++i) {
+  std::uint32_t istart = 0;
+  for (std::uint32_t i = 0; i < header.sub.number; ++i) {
     auto& hd_geo = raw_geosets.emplace_back(ops[i]);
     hd_geo.istart = istart;
     istart += hd_geo.icount;

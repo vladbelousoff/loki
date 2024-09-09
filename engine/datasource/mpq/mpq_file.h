@@ -18,7 +18,6 @@
 #pragma once
 
 #include "engine/utils/string_manager.h"
-#include "engine/utils/types.h"
 #include "mpq_archive.h"
 
 namespace loki {

@@ -18,11 +18,10 @@
 #pragma once
 
 #include <functional>
+#include <libassert/assert.hpp>
 #include <openssl/evp.h>
 
 #include "crypro_constants.h"
-#include "engine/utils/types.h"
-#include "libassert/assert.hpp"
 
 namespace loki {
 
@@ -46,9 +45,9 @@ namespace loki {
   {
   public:
     static constexpr std::size_t DIGEST_LENGTH = DigestLength;
-    using Digest = std::array<u8, DIGEST_LENGTH>;
+    using Digest = std::array<std::uint8_t, DIGEST_LENGTH>;
 
-    static auto get_digest_of(const u8* data, std::size_t len) -> Digest
+    static auto get_digest_of(const std::uint8_t* data, std::size_t len) -> Digest
     {
       GenericHash hash;
       hash.update_data(data, len);
@@ -68,7 +67,7 @@ namespace loki {
     GenericHash()
       : context(GenericHashImpl::create_context())
     {
-      i32 result = EVP_DigestInit_ex(context, HashCreator(), nullptr);
+      int result = EVP_DigestInit_ex(context, HashCreator(), nullptr);
       DEBUG_ASSERT(result == 1);
     }
 
@@ -97,7 +96,7 @@ namespace loki {
         return *this;
       }
 
-      i32 result = EVP_MD_CTX_copy_ex(context, other.context);
+      int result = EVP_MD_CTX_copy_ex(context, other.context);
       DEBUG_ASSERT(result == 1);
       digest = other.digest;
 
@@ -116,15 +115,15 @@ namespace loki {
       return *this;
     }
 
-    void update_data(const u8* data, std::size_t length)
+    void update_data(const std::uint8_t* data, std::size_t length)
     {
-      i32 result = EVP_DigestUpdate(context, data, length);
+      int result = EVP_DigestUpdate(context, data, length);
       DEBUG_ASSERT(result == 1);
     }
 
     void update_data(std::string_view str)
     {
-      update_data(reinterpret_cast<const u8*>(str.data()), str.size());
+      update_data(reinterpret_cast<const std::uint8_t*>(str.data()), str.size());
     }
 
     void update_data(const std::string& str)
@@ -145,8 +144,8 @@ namespace loki {
 
     void finalize()
     {
-      u32 length;
-      i32 result = EVP_DigestFinal_ex(context, digest.data(), &length);
+      std::uint32_t length;
+      int result = EVP_DigestFinal_ex(context, digest.data(), &length);
       DEBUG_ASSERT(result == 1);
       DEBUG_ASSERT(length == DIGEST_LENGTH);
     }

@@ -23,9 +23,9 @@ loki::ByteBuffer::ByteBuffer()
 }
 
 void
-loki::ByteBuffer::append(const std::vector<loki::u8>& value)
+loki::ByteBuffer::append(const std::vector<std::uint8_t>& value)
 {
-  append<loki::u8>(value.size());
+  append<std::uint8_t>(value.size());
   buffer.insert(buffer.end(), value.begin(), value.end());
 }
 

@@ -21,8 +21,8 @@
 #include <openssl/rand.h>
 
 void
-loki::crypto::get_random_bytes(loki::u8* buf, std::size_t len)
+loki::crypto::get_random_bytes(std::uint8_t* buf, std::size_t len)
 {
-  i32 result = RAND_bytes(buf, static_cast<i32>(len));
+  int result = RAND_bytes(buf, static_cast<int>(len));
   DEBUG_ASSERT(result == 1, "Not enough randomness in OpenSSL's entropy pool. What in the world are you running on?");
 }

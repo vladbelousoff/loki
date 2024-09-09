@@ -22,13 +22,12 @@
 #include "GL/glew.h"
 #include "engine/asset/asset.h"
 #include "engine/texture/blp_texture.h"
-#include "engine/utils/types.h"
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 
 namespace loki {
 
-  enum class TextureType : u32
+  enum class TextureType : std::uint32_t
   {
     FILENAME = 0,
     BODY,
@@ -52,8 +51,8 @@ namespace loki {
   struct ModelVertex
   {
     glm::vec3 pos;
-    u8 weights[4];
-    u8 bones[4];
+    std::uint8_t weights[4];
+    std::uint8_t bones[4];
     glm::vec3 normal;
     glm::vec2 texcoords;
     int unk1, unk2; // always 0,0 so this is probably unused
@@ -64,7 +63,7 @@ namespace loki {
   struct M2ModelTextureDef
   {
     TextureType type;
-    u32 flags;
+    std::uint32_t flags;
     M2Field name;
   };
 
@@ -90,17 +89,17 @@ namespace loki {
 
     struct Header
     {
-      u8 id[4];
-      u8 version[4];
+      std::uint8_t id[4];
+      std::uint8_t version[4];
       M2Field name;
-      u32 global_model_flags;
+      std::uint32_t global_model_flags;
       M2Field global_sequence;
       M2Field animations;
       M2Field animation_lookup;
       M2Field bones;
       M2Field key_bone_lookup;
       M2Field vertices;
-      u32 number_of_views;
+      std::uint32_t number_of_views;
       M2Field colors;
       M2Field textures;
       M2Field transparency;
@@ -115,7 +114,7 @@ namespace loki {
 
     std::vector<char> model_name;
     std::vector<ModelVertex> raw_vertices;
-    std::vector<u16> raw_tex_lookup;
+    std::vector<std::uint16_t> raw_tex_lookup;
     std::vector<std::shared_ptr<M2ModelView>> model_views;
     std::vector<std::shared_ptr<BLPTexture>> textures;
     GLuint vao;

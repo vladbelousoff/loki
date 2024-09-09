@@ -18,7 +18,6 @@
 #pragma once
 
 #include "engine/asset/asset.h"
-#include "engine/utils/types.h"
 #include "glm/vec3.hpp"
 
 namespace loki {
@@ -29,53 +28,53 @@ namespace loki {
   {
     union
     {
-      u32 number;
-      u32 length;
+      std::uint32_t number;
+      std::uint32_t length;
     };
 
-    u32 offset;
+    std::uint32_t offset;
   };
 
   struct M2ModelRenderPass
   {
-    i32 tex;
-    i32 geoset;
+    std::int32_t tex;
+    std::int32_t geoset;
   };
 
   struct M2ModelTexUnit
   {
     // probably the texture units
     // size always >=number of materials it seems
-    u16 flags;       // Usually 16 for static textures, and 0 for animated textures.
-    u16 shading;     // If set to 0x8000: shaders. Used in sky boxes to ditch the need for depth buffering. See below.
-    u16 op;          // Material this texture is part of (index into mat)
-    u16 op2;         // Always same as above?
-    i16 colorIndex;  // A Color out of the Colors-Block or -1 if none.
-    u16 flagsIndex;  // RenderFlags (index into render flags, TexFlags)
-    u16 texunit;     // Index into the texture unit lookup table.
-    u16 mode;        // See below.
-    u16 texture_id;  // Index into Texture lookup table
-    u16 texunit2;    // copy of texture unit value?
-    u16 trans_id;    // Index into transparency lookup table.
-    u16 tex_anim_id; // Index into uv animation lookup table.
+    std::uint16_t flags;       // Usually 16 for static textures, and 0 for animated textures.
+    std::uint16_t shading;     // If set to 0x8000: shaders. Used in sky boxes to ditch the need for depth buffering. See below.
+    std::uint16_t op;          // Material this texture is part of (index into mat)
+    std::uint16_t op2;         // Always same as above?
+    std::int16_t colorIndex;   // A Color out of the Colors-Block or -1 if none.
+    std::uint16_t flagsIndex;  // RenderFlags (index into render flags, TexFlags)
+    std::uint16_t texunit;     // Index into the texture unit lookup table.
+    std::uint16_t mode;        // See below.
+    std::uint16_t texture_id;  // Index into Texture lookup table
+    std::uint16_t texunit2;    // copy of texture unit value?
+    std::uint16_t trans_id;    // Index into transparency lookup table.
+    std::uint16_t tex_anim_id; // Index into uv animation lookup table.
   };
 
   struct M2ModelGeoset
   {
-    u32 id;                      // mesh part id?
-    u16 vstart;                  // first vertex, Starting vertex number.
-    u16 vcount;                  // num vertices, Number of vertices.
-    u16 istart;                  // first index, Starting triangle index (that's 3* the number of triangles drawn so far).
-    u16 icount;                  // num indices, Number of triangle indices.
-    u16 number_of_skinned_bones; // number of bone indices, Number of elements in the bone lookup table.
-    u16 start_bones;             // ? always 1 to 4, Starting index in the bone lookup table.
-    u16 root_bone;               // root bone?
-    u16 number_of_bones;         //
+    std::uint32_t id;                      // mesh part id?
+    std::uint16_t vstart;                  // first vertex, Starting vertex number.
+    std::uint16_t vcount;                  // num vertices, Number of vertices.
+    std::uint16_t istart;                  // first index, Starting triangle index (that's 3* the number of triangles drawn so far).
+    std::uint16_t icount;                  // num indices, Number of triangle indices.
+    std::uint16_t number_of_skinned_bones; // number of bone indices, Number of elements in the bone lookup table.
+    std::uint16_t start_bones;             // ? always 1 to 4, Starting index in the bone lookup table.
+    std::uint16_t root_bone;               // root bone?
+    std::uint16_t number_of_bones;         //
     glm::vec3 bounding_box[2];
     float radius;
   };
 
-  // Same as M2ModelGeoset but with an u32 as istart, to handle index > 65535 (present in HD models)
+  // Same as M2ModelGeoset but with a std::uint32_t as istart, to handle index > 65535 (present in HD models)
   struct M2ModelGeosetHD
   {
     M2ModelGeosetHD()
@@ -132,15 +131,15 @@ namespace loki {
       bounding_box[1] = geo.bounding_box[1];
     }
 
-    u32 id;                      // mesh part id?
-    u16 vstart;                  // first vertex, Starting vertex number.
-    u16 vcount;                  // num vertices, Number of vertices.
-    u32 istart;                  // first index, Starting triangle index (that's 3* the number of triangles drawn so far).
-    u16 icount;                  // num indices, Number of triangle indices.
-    u16 number_of_skinned_bones; // number of bone indices, Number of elements in the bone lookup table.
-    u16 start_bones;             // ? always 1 to 4, Starting index in the bone lookup table.
-    u16 root_bone;               // root bone?
-    u16 number_of_bones;         //
+    std::uint32_t id;                      // mesh part id?
+    std::uint16_t vstart;                  // first vertex, Starting vertex number.
+    std::uint16_t vcount;                  // num vertices, Number of vertices.
+    std::uint32_t istart;                  // first index, Starting triangle index (that's 3* the number of triangles drawn so far).
+    std::uint16_t icount;                  // num indices, Number of triangle indices.
+    std::uint16_t number_of_skinned_bones; // number of bone indices, Number of elements in the bone lookup table.
+    std::uint16_t start_bones;             // ? always 1 to 4, Starting index in the bone lookup table.
+    std::uint16_t root_bone;               // root bone?
+    std::uint16_t number_of_bones;         //
     glm::vec3 bounding_box[2];
     float radius;
     bool display;
@@ -166,13 +165,13 @@ namespace loki {
       M2Field props;
       M2Field sub;
       M2Field tex;
-      i32 lod; // LOD bias?
+      std::int32_t lod; // LOD bias?
     };
 
 #pragma pack(pop)
 
     Header header;
-    std::vector<u16> raw_indices;
+    std::vector<std::uint16_t> raw_indices;
     std::vector<M2ModelGeosetHD> raw_geosets;
     std::vector<M2ModelTexUnit> raw_tex_units;
   };

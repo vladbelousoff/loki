@@ -19,11 +19,9 @@
 
 #include <array>
 
-#include "engine/utils/types.h"
-
 namespace loki::crypto {
 
-  void get_random_bytes(u8* buf, std::size_t len);
+  void get_random_bytes(std::uint8_t* buf, std::size_t len);
 
   template<typename Container>
   void get_random_bytes(Container& c)
@@ -32,9 +30,9 @@ namespace loki::crypto {
   }
 
   template<std::size_t S>
-  std::array<u8, S> get_random_bytes()
+  std::array<std::uint8_t, S> get_random_bytes()
   {
-    std::array<u8, S> arr;
+    std::array<std::uint8_t, S> arr;
     get_random_bytes(arr);
     return arr;
   }
