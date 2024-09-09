@@ -72,7 +72,7 @@ GameApp::~GameApp()
 
 // std::filesystem::path model_path = R"(Character\Draenei\Female\DraeneiFemale.M2)";
 std::filesystem::path model_path = R"(Creature\ArthasLichKing\ArthasLichKing.M2)";
-auto m2_model = loki::M2Model::create(model_path);
+std::shared_ptr<loki::M2Model> m2_model;
 
 bool
 GameApp::on_init()
@@ -88,6 +88,7 @@ GameApp::on_init()
   prog = loki::ShaderManager::create_program(vert, frag);
 
   loki::MPQFileManager::get_ref().init(get_root_path() / "data");
+  m2_model = loki::M2Model::create(model_path);
   m2_model->request_load_full();
 
   glEnable(GL_DEPTH_TEST);

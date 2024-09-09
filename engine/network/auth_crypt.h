@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include "auth_defines.h"
 #include "engine/crypto/arc_4.h"
 
