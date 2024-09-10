@@ -163,26 +163,50 @@ FetchContent_MakeAvailable(OpenSSL)
 # Source files
 set(SOURCES
         main.cpp
+        engine/config.h
+        engine/engine_app.h
         engine/engine_app.cpp
+        engine/time/scope_timer.h
+        engine/utils/strings.h
+        engine/utils/string_manager.h
         engine/utils/string_manager.cpp
+        engine/utils/big_num.h
         engine/utils/big_num.cpp
+        engine/utils/byte_buffer.h
         engine/utils/byte_buffer.cpp
+        engine/crypto/crypto_random.h
         engine/crypto/crypto_random.cpp
+        engine/crypto/arc_4.h
         engine/crypto/arc_4.cpp
+        engine/crypto/srp_6.h
         engine/crypto/srp_6.cpp
+        engine/network/auth_session.h
         engine/network/auth_session.cpp
+        engine/network/auth_crypt.h
         engine/network/auth_crypt.cpp
+        engine/network/world_session.h
         engine/network/world_session.cpp
+        engine/render/shader.h
         engine/render/shader.cpp
+        engine/datasource/mpq/mpq_archive.h
         engine/datasource/mpq/mpq_archive.cpp
+        engine/datasource/mpq/mpq_chain.h
         engine/datasource/mpq/mpq_chain.cpp
+        engine/datasource/mpq/mpq_file.h
         engine/datasource/mpq/mpq_file.cpp
+        engine/datasource/mpq/mpq_file_manager.h
         engine/datasource/mpq/mpq_file_manager.cpp
+        engine/asset/asset.h
         engine/asset/asset.cpp
+        engine/model/m_2_model.h
         engine/model/m_2_model.cpp
+        engine/model/m_2_model_view.h
         engine/model/m_2_model_view.cpp
+        engine/texture/blp_texture.h
         engine/texture/blp_texture.cpp
+        engine/mt/main_thread_queue.h
         engine/mt/main_thread_queue.cpp
+        game/game_app.h
         game/game_app.cpp
 )
 

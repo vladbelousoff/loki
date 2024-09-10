@@ -17,10 +17,8 @@
 
 #include "game_app.h"
 
-#include "engine/datasource/mpq/mpq_file_manager.h"
 #include "engine/model/m_2_model.h"
 #include "engine/mt/main_thread_queue.h"
-#include "engine/network/auth_session.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "imgui.h"
