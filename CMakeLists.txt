@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 # Project definition
-project(Loki LANGUAGES CXX)
+project(Loki LANGUAGES C CXX)
 
 # Set the C++ standard
 set(CMAKE_CXX_STANDARD 20)
@@ -38,12 +38,6 @@ CPMAddPackage(
         "GLFW_BUILD_DOCS OFF"
         "GLFW_INSTALL OFF"
         "GLFW_BUILD_SHARED_LIBS OFF"
-)
-
-CPMAddPackage(
-        NAME glew
-        GITHUB_REPOSITORY Perlmint/glew-cmake
-        GIT_TAG glew-cmake-2.2.0
 )
 
 FetchContent_Declare(
@@ -160,6 +154,19 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(OpenSSL)
 
+# Glad library configuration
+set(GLAD_DIR ${CMAKE_SOURCE_DIR}/external/glad)
+
+# Add glad library
+add_library(glad STATIC
+        ${GLAD_DIR}/src/glad.c
+)
+
+# Include glad headers
+target_include_directories(glad PUBLIC
+        ${GLAD_DIR}/include
+)
+
 # Source files
 set(SOURCES
         main.cpp
@@ -223,10 +230,10 @@ endif ()
 
 # Link dependencies to the executable
 target_link_libraries(${PROJECT_NAME}
+        glad
         libassert::assert
         boost_pfr
         glfw
-        libglew_static
         imgui
         glm
         spdlog

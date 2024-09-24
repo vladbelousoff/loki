@@ -19,7 +19,8 @@
 
 #include "m_2_model_view.h"
 
-#include "GL/glew.h"
+#include <glad/glad.h>
+
 #include "engine/asset/asset.h"
 #include "engine/texture/blp_texture.h"
 #include "glm/vec2.hpp"

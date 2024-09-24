@@ -17,11 +17,11 @@
 
 #include "m_2_model.h"
 
-#include "GL/glew.h"
+#include <glad/glad.h>
+#include <spdlog/spdlog.h>
+
 #include "glm/gtc/type_ptr.hpp"
 #include "libassert/assert.hpp"
-
-#include <spdlog/spdlog.h>
 
 void
 loki::M2Model::on_fully_loaded(const std::vector<char>& buffer)
@@ -165,15 +165,10 @@ loki::M2Model::draw() const
 
     auto& geoset = model_view->raw_geosets[pass.geoset];
 
-    auto vstart = geoset.vstart;
-    auto vend = geoset.vstart + geoset.vcount;
-    auto icount = geoset.icount;
-    auto* indices = &model_view->raw_indices[geoset.istart];
-
     // Currently we don't have a EBO, and we get the indices from RAM
-    glDrawRangeElements(GL_TRIANGLES, vstart, vend, icount, GL_UNSIGNED_SHORT, indices);
+    glDrawElements(GL_TRIANGLES, geoset.icount, GL_UNSIGNED_SHORT, &model_view->raw_indices[geoset.istart]);
 
-    // Unbid the texture
+    // Unbind the texture
     glBindTexture(GL_TEXTURE_2D, 0);
   }
 

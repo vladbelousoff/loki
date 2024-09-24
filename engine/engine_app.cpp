@@ -88,10 +88,7 @@ loki::EngineApp::on_init()
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-#ifdef __APPLE__
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
 
   // Set error callback
   glfwSetErrorCallback([](int error, const char* description) {
@@ -112,10 +109,8 @@ loki::EngineApp::on_init()
   // VSYNC
   glfwSwapInterval(1);
 
-  if (glewInit()) {
-    spdlog::error("Failed to initialize GLEW!");
-    return false;
-  }
+  // Init GLAD
+  gladLoadGL();
 
   // Setup Dear ImGui context
   IMGUI_CHECKVERSION();

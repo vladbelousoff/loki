@@ -17,8 +17,9 @@
 
 #include "blp_texture.h"
 
+#include <glad/glad.h>
+
 #include "../blpconverter-src/blp.h"
-#include "GL/glew.h"
 #include "libassert/assert.hpp"
 
 void
