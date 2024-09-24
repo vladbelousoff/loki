@@ -110,7 +110,10 @@ loki::EngineApp::on_init()
   glfwSwapInterval(1);
 
   // Init GLAD
-  gladLoadGL();
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    spdlog::error("Failed to initialize GLAD!");
+    return false;
+  }
 
   // Setup Dear ImGui context
   IMGUI_CHECKVERSION();
