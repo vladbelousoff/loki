@@ -17,7 +17,7 @@
 
 #include "blp_texture.h"
 
-#include <glad/glad.h>
+#include <GL/gl3w.h>
 
 #include "../blpconverter-src/blp.h"
 #include "libassert/assert.hpp"

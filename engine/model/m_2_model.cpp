@@ -17,7 +17,7 @@
 
 #include "m_2_model.h"
 
-#include <glad/glad.h>
+#include <GL/gl3w.h>
 #include <spdlog/spdlog.h>
 
 #include "glm/gtc/type_ptr.hpp"

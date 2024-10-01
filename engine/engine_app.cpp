@@ -110,8 +110,8 @@ loki::EngineApp::on_init()
   glfwSwapInterval(1);
 
   // Init GLAD
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    spdlog::error("Failed to initialize GLAD!");
+  if (gl3wInit()) {
+    spdlog::error("Failed to initialize gl3w!");
     return false;
   }
 

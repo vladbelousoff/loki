@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <glad/glad.h>
+#include <GL/gl3w.h>
 
 #include "engine/asset/asset.h"
 

@@ -19,7 +19,7 @@
 
 #include "m_2_model_view.h"
 
-#include <glad/glad.h>
+#include <GL/gl3w.h>
 
 #include "engine/asset/asset.h"
 #include "engine/texture/blp_texture.h"

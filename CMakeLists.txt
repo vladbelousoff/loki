@@ -154,18 +154,12 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(OpenSSL)
 
-# Glad library configuration
-set(GLAD_DIR ${CMAKE_SOURCE_DIR}/external/glad)
-
-# Add glad library
-add_library(glad STATIC
-        ${GLAD_DIR}/src/glad.c
+FetchContent_Declare(
+        gl3w
+        GIT_REPOSITORY https://github.com/vladbelousoff/gl3w.git
+        GIT_TAG 1.0.0
 )
-
-# Include glad headers
-target_include_directories(glad PUBLIC
-        ${GLAD_DIR}/include
-)
+FetchContent_MakeAvailable(gl3w)
 
 # Source files
 set(SOURCES
@@ -230,7 +224,7 @@ endif ()
 
 # Link dependencies to the executable
 target_link_libraries(${PROJECT_NAME}
-        glad
+        gl3w
         libassert::assert
         boost_pfr
         glfw
