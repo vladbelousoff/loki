@@ -7,6 +7,8 @@ project(Loki LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+option(USE_MIMALLOC "Use mimalloc instead of standard allocation" OFF)
+
 include(FetchContent)
 include(cmake/CPM.cmake)
 
@@ -92,15 +94,6 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(cli11)
-
-CPMAddPackage(
-        NAME mimalloc
-        GITHUB_REPOSITORY microsoft/mimalloc
-        GIT_TAG v2.1.7
-        OPTIONS
-        "MI_BUILD_SHARED OFF"
-        "MI_BUILD_TESTS OFF"
-)
 
 FetchContent_Declare(
         StormLib
@@ -232,7 +225,6 @@ target_link_libraries(${PROJECT_NAME}
         glm
         spdlog
         CLI11::CLI11
-        mimalloc-static
         StormLib::storm
         sockpp-static
         Glob
@@ -240,6 +232,19 @@ target_link_libraries(${PROJECT_NAME}
         ssl
         crypto
 )
+
+if (USE_MIMALLOC)
+    CPMAddPackage(
+            NAME mimalloc
+            GITHUB_REPOSITORY microsoft/mimalloc
+            GIT_TAG v2.1.7
+            OPTIONS
+            "MI_BUILD_SHARED OFF"
+            "MI_BUILD_TESTS OFF"
+    )
+
+    target_link_libraries(${PROJECT_NAME} mimalloc-static)
+endif ()
 
 target_include_directories(${PROJECT_NAME} PRIVATE .)
 
