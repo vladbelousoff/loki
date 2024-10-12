@@ -25,7 +25,7 @@ loki::MPQFile::is_valid() const -> bool
 }
 
 auto
-loki::MPQFile::get_name() const -> loki::StringID
+loki::MPQFile::get_name() const -> loki::StringId
 {
   return name;
 }

@@ -58,7 +58,7 @@ namespace loki {
     virtual void on_fully_loaded(const std::vector<char>& buffer) = 0;
 
   protected:
-    StringID asset_path;
+    StringId asset_path;
 
   protected:
     explicit Asset()
@@ -80,7 +80,7 @@ namespace loki {
     static auto create(const std::filesystem::path& path) -> std::shared_ptr<AssetType>
     {
       auto result = std::make_shared<AssetType>();
-      result->asset_path = StringID(to_uppercase(path.string()));
+      result->asset_path = StringId(to_uppercase(path.string()));
       return result;
     }
   };

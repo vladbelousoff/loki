@@ -19,34 +19,34 @@
 
 std::shared_mutex loki::StringManager::mutex;
 std::string loki::StringManager::invalid_string;
-std::unordered_map<loki::StringID, std::string> loki::StringManager::id_to_string;
-std::unordered_map<std::string, loki::StringID> loki::StringManager::string_to_id;
+std::unordered_map<loki::StringId, std::string> loki::StringManager::id_to_string;
+std::unordered_map<std::string, loki::StringId> loki::StringManager::string_to_id;
 std::size_t loki::StringManager::string_counter = 0;
 
-loki::StringID::StringID()
+loki::StringId::StringId()
   : id{ 0 }
 {
 }
 
-loki::StringID::StringID(const std::string& string)
+loki::StringId::StringId(const std::string& string)
   : id{ StringManager::get_id_by_string(string).id }
 {
 }
 
 bool
-loki::StringID::operator==(const loki::StringID& other) const
+loki::StringId::operator==(const loki::StringId& other) const
 {
   return id == other.id;
 }
 
 auto
-loki::StringID::to_string() const -> const std::string&
+loki::StringId::to_string() const -> const std::string&
 {
   return StringManager::get_string_by_id(*this);
 }
 
 auto
-loki::StringManager::get_string_by_id(loki::StringID id) -> const std::string&
+loki::StringManager::get_string_by_id(loki::StringId id) -> const std::string&
 {
   std::shared_lock<std::shared_mutex> lock(mutex);
   auto it = id_to_string.find(id);
@@ -58,7 +58,7 @@ loki::StringManager::get_string_by_id(loki::StringID id) -> const std::string&
 }
 
 auto
-loki::StringManager::get_id_by_string(const std::string& string) -> loki::StringID
+loki::StringManager::get_id_by_string(const std::string& string) -> loki::StringId
 {
   {
     std::shared_lock<std::shared_mutex> lock(mutex);
@@ -68,7 +68,7 @@ loki::StringManager::get_id_by_string(const std::string& string) -> loki::String
     }
   }
 
-  StringID id = StringID{};
+  StringId id = StringId{};
 
   {
     std::unique_lock<std::shared_mutex> lock(mutex);

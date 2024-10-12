@@ -33,7 +33,7 @@ namespace loki {
 
   public:
     auto is_valid() const -> bool;
-    auto get_name() const -> StringID;
+    auto get_name() const -> StringId;
     auto get_size() const -> unsigned long;
 
     auto read(void* data, unsigned long size) const -> unsigned long;
@@ -43,7 +43,7 @@ namespace loki {
     auto seek(long position, long method) const -> unsigned long;
 
   private:
-    StringID name;
+    StringId name;
     HANDLE handle;
   };
 

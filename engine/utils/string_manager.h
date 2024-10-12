@@ -28,17 +28,17 @@ namespace loki {
 
   class StringManager;
 
-  class StringID
+  class StringId
   {
-    friend struct std::hash<StringID>;
+    friend struct std::hash<StringId>;
     friend class StringManager;
 
   public:
-    explicit StringID();
-    explicit StringID(const std::string& string);
+    explicit StringId();
+    explicit StringId(const std::string& string);
 
     auto to_string() const -> const std::string&;
-    bool operator==(const StringID& other) const;
+    bool operator==(const StringId& other) const;
 
   private:
     std::size_t id;
@@ -46,27 +46,27 @@ namespace loki {
 
   class StringManager
   {
-    friend class StringID;
+    friend class StringId;
 
   public:
     static std::string invalid_string;
 
   private:
-    static auto get_string_by_id(StringID id) -> const std::string&;
-    static auto get_id_by_string(const std::string& string) -> StringID;
+    static auto get_string_by_id(StringId id) -> const std::string&;
+    static auto get_id_by_string(const std::string& string) -> StringId;
 
     static std::shared_mutex mutex;
     static std::size_t string_counter;
-    static std::unordered_map<StringID, std::string> id_to_string;
-    static std::unordered_map<std::string, StringID> string_to_id;
+    static std::unordered_map<StringId, std::string> id_to_string;
+    static std::unordered_map<std::string, StringId> string_to_id;
   };
 
 } // namespace loki
 
 template<>
-struct std::hash<loki::StringID>
+struct std::hash<loki::StringId>
 {
-  std::size_t operator()(const loki::StringID& string) const
+  std::size_t operator()(const loki::StringId& string) const
   {
     return std::hash<std::size_t>{}(string.id);
   }
