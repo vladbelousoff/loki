@@ -7,6 +7,7 @@ for better performance and maintainability.
 ## Requirements
 
 - CMake
+- Python 3.X
 - C++ Compiler
     - GCC 12 and later
     - Clang 15 and later
@@ -15,26 +16,8 @@ for better performance and maintainability.
 ## How to Build
 
 ```bash
-cmake -B build && cmake --build build --target Loki -j8
+cmake -B build && cmake --build build --target Loki
 ```
-
-## Third Party Libraries
-
-The Loki Project relies on the following external libraries and frameworks:
-
-- `glfw3`
-- `glew`
-- `imgui`
-- `glm`
-- `spdlog`
-- `cli11`
-- `mimalloc`
-- `stormlib`
-- `sockpp`
-- `glob`
-- `libassert`
-- `openssl`
-- `pfr`
 
 ## Special Thanks
 
