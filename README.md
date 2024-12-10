@@ -4,6 +4,8 @@ The **Loki Project** is an implementation of a client aimed at recreating the cl
 iconic MMORPGs. This project is designed to maintain high fidelity to the original game while modernizing its internals
 for better performance and maintainability.
 
+![Local Image](images/demo.png)
+
 ## Requirements
 
 - CMake
